@@ -16,4 +16,4 @@ The retained reference is now released in finally. Two isolated ownership regres
 
 The local cpu-tests profile now supplies 113 verified Java-only cases. Propose a minimal job in this fork that obtains the actual parent and runs that profile on a clean runner. Dependency resolution still needs the declared Maven artifacts. Do not submit this work upstream.
 
-**Acceptance:** Pin the runner/JDK and dependency sources, print versions, install the integrated parent normally, publish clear results and verify a clean runner. Do not silently skip native tests and call the result full CUDA coverage. This remains an unimplemented proposal, not a verified CI job.
+**Status:** A separate direct-javac CPU harness and weekly workflow are now prepared locally. They avoid Maven/native dependencies and pass all 113 cases locally. Publishing the workflows is awaiting explicit approval after automatic review denied the push; a clean hosted run is still unverified. See [contributor automation](CONTRIBUTOR_AUTOMATION.md). The Maven parent/profile CI variant above remains a proposal. Do not call either variant full CUDA coverage.

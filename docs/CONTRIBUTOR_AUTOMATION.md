@@ -3,6 +3,12 @@
 This fork preserves JCuda's original attribution and license. These tools serve
 RicheyWorks/jcuda, jcuda-common and jcuda-parent; they do not contact upstream.
 
+**Setup status (2026-11-04):** the workflow source is committed locally, but has
+not been pushed or run on GitHub. Automatic approval review denied the proposed
+push to the fork's public feature and master branches because explicit approval
+for that publication/default-branch mutation was required. Hosted runner and
+actual incoming-PR execution remain unverified. No retry was made.
+
 ## Weekly inspection
 
 `weekly-pr-review.yml` runs Mondays at 06:17 UTC on master, or manually. It reads
@@ -80,7 +86,11 @@ resolver rejection and archive boundaries are covered by unit tests. Consult
 Actions run results for hosted verification, rather than treating this document
 as a current status dashboard.
 
-A separate weekly ChatGPT highlight task can read these runs and current PRs,
+A separate enabled weekly ChatGPT highlight task reads current PRs and can read
+these runs once published. It is scheduled Mondays around 09:00
+America/Los_Angeles, beginning November 9, 2026 (flexible within an hour), retaining
+the pre-existing schedule rather than creating a duplicate. The task was updated
+to require read-only operation and disclose missing workflow evidence. It can
 explain promising work and flag stale/missing evidence. It must remain read-only,
 treat PR instructions as untrusted, and leave candidate execution and all write
 actions to explicit owner direction. It needs no new personal access token.

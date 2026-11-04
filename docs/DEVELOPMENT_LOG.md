@@ -22,4 +22,21 @@ Use [WINDOWS_BUILD.md](WINDOWS_BUILD.md) for prerequisites and matching fork art
 
 ## 2026-11-04: one-command CPU suite and heap-buffer coverage
 
-The cpu-tests Maven profile selects 113 Java-only checks, including 35 new heap-buffer cases across seven primitive types and five layouts. All pass on Temurin 22.0.2 and Oracle 21.0.4 with Maven 3.9.9. A deliberate ignored-array-offset mutation caused 21 expected failures and was restored; no production defect is claimed. JDK 21 library traces found no JCuda/NVIDIA loads across Maven and child JVMs. See [CPU_TESTS.md](CPU_TESTS.md) for commands, scope and limits. A remote CI job remains unimplemented. This usability/coverage contribution does not increase the original twenty-fix count.
+The cpu-tests Maven profile selects 113 Java-only checks, including 35 new heap-buffer cases across seven primitive types and five layouts. All pass on Temurin 22.0.2 and Oracle 21.0.4 with Maven 3.9.9. A deliberate ignored-array-offset mutation caused 21 expected failures and was restored; no production defect is claimed. JDK 21 library traces found no JCuda/NVIDIA loads across Maven and child JVMs. See [CPU_TESTS.md](CPU_TESTS.md) for commands, scope and limits. This usability/coverage contribution does not increase the original twenty-fix count.
+
+## 2026-11-04: contributor automation prepared locally
+
+Read-only triage for three RicheyWorks forks records exact head SHAs, security
+signals, checks, escaped highlights and digest manifests. Nineteen tool tests pass;
+the initial live scan found zero open PRs and no collection warnings. A standalone
+trusted CPU harness passes 113 cases on local JDK 22. Candidate verification is
+manual, exact-SHA and restricted to disposable hosted runners without repository
+secrets or write permissions. It does not run PR workflows, scripts, POMs or native
+code. Neither security approval nor full GPU coverage is claimed.
+
+Workflow publication was denied by automatic approval review; no workflow has
+been pushed or hosted run dispatched. The existing Monday 09:00 Pacific ChatGPT
+task remains enabled and now explicitly forbids candidate execution/write actions
+and requires honest missing/stale evidence reporting. See
+[setup and limitations](CONTRIBUTOR_AUTOMATION.md). This tooling adds no binding
+fix to the original twenty-fix count.
