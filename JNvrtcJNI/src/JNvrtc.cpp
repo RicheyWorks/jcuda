@@ -26,6 +26,7 @@
  */
 
 #include "JNvrtc.hpp"
+#include <new>
 #include "JNvrtc_common.hpp"
 #include <cstring>
 #include <string>
@@ -138,8 +139,15 @@ JNIEXPORT jint JNICALL Java_jcuda_nvrtc_JNvrtc_nvrtcGetNumSupportedArchsNative
 
     Logger::log(LOG_TRACE, "Executing nvrtcGetNumSupportedArchs\n");
 
+    if (env->GetArrayLength(numArchs) == 0)
+    {
+        ThrowByName(env, "java/lang/IllegalArgumentException",
+            "Parameter 'numArchs' must have at least one element");
+        return JCUDA_INTERNAL_ERROR;
+    }
     int nativeNumArchs = 0;
     int result = nvrtcGetNumSupportedArchs(&nativeNumArchs);
+    if (result != NVRTC_SUCCESS) return result;
     if (!set(env, numArchs, 0, nativeNumArchs)) return JCUDA_INTERNAL_ERROR;
     return result;
 }
@@ -161,14 +169,33 @@ JNIEXPORT jint JNICALL Java_jcuda_nvrtc_JNvrtc_nvrtcGetSupportedArchsNative
 
     Logger::log(LOG_TRACE, "Executing nvrtcGetSupportedArchs\n");
 
-    int *nativeSupportedArchs;
-    if (!initNative(env, supportedArchs, nativeSupportedArchs, false)) return JCUDA_INTERNAL_ERROR;
-
-    
     int nativeNumArchs = 0;
-    int result = nvrtcGetSupportedArchs(nativeSupportedArchs);
-    
-    if (!releaseNative(env, nativeSupportedArchs, supportedArchs, true)) return JCUDA_INTERNAL_ERROR;
+    int result = nvrtcGetNumSupportedArchs(&nativeNumArchs);
+    if (result != NVRTC_SUCCESS) return result;
+    if (nativeNumArchs < 0) return NVRTC_ERROR_INTERNAL_ERROR;
+    if (env->GetArrayLength(supportedArchs) < nativeNumArchs)
+    {
+        ThrowByName(env, "java/lang/IllegalArgumentException",
+            "Parameter 'supportedArchs' is smaller than the supported architecture count");
+        return JCUDA_INTERNAL_ERROR;
+    }
+
+    // NVRTC writes exactly nativeNumArchs elements. Do not allocate from the
+    // caller's capacity or copy uninitialized trailing elements back to Java.
+    int *nativeSupportedArchs = new (std::nothrow) int[nativeNumArchs];
+    if (nativeSupportedArchs == NULL)
+    {
+        ThrowByName(env, "java/lang/OutOfMemoryError",
+            "Out of memory while querying supported architectures");
+        return JCUDA_INTERNAL_ERROR;
+    }
+    result = nvrtcGetSupportedArchs(nativeSupportedArchs);
+    if (result == NVRTC_SUCCESS)
+    {
+        env->SetIntArrayRegion(supportedArchs, 0, nativeNumArchs, nativeSupportedArchs);
+    }
+    delete[] nativeSupportedArchs;
+    if (env->ExceptionCheck()) return JCUDA_INTERNAL_ERROR;
 
     return result;
 }

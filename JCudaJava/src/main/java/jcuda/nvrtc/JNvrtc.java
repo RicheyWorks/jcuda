@@ -150,6 +150,7 @@ public class JNvrtc
      * get the supported architectures.
      * 
      * @param numArchs numArchs number of supported architectures.
+     * @throws IllegalArgumentException if numArchs has no elements
      * @return NVRTC_SUCCESS, NVRTC_ERROR_INVALID_INPUT 
      */
     public static int nvrtcGetNumSupportedArchs(int numArchs[])
@@ -163,8 +164,11 @@ public class JNvrtc
      * parameter \p supportedArchs with the architectures supported by NVRTC. 
      * The array is sorted in the ascending order. The size of the array to 
      * be passed can be determined using ::nvrtcGetNumSupportedArchs.
+     * Arrays may be larger than this count; trailing elements are unchanged.
      * 
      * @param supportedArchs supportedArchs sorted array of supported architectures.
+     * @throws IllegalArgumentException if supportedArchs is smaller than the
+     * number returned by nvrtcGetNumSupportedArchs
      * @return NVRTC_SUCCESS, NVRTC_ERROR_INVALID_INPUT 
      */
     public static int nvrtcGetSupportedArchs(int supportedArchs[])
