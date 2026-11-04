@@ -7,7 +7,7 @@ Want to help with Java, CUDA, JNI, testing or build setup? Start with [CONTRIBUT
 
 ## 🏆 Fix log
 
-**10 distinct fixes implemented and verified, proposed upstream; 0 merged.** This includes 9 runtime/API fixes (including diagnostic formatting) and 1 reproduced build fix. These are draft contributions from this fork, not released JCuda behavior or upstream endorsement. Status checked 2026-11-04. Companion tests and documentation do not increase the fix count.
+**11 distinct fixes implemented and verified, proposed upstream; 0 merged.** This includes 10 runtime/API fixes (including diagnostic formatting) and 1 reproduced build fix. These are draft contributions from this fork, not released JCuda behavior or upstream endorsement. Status checked 2026-11-04. Companion tests and documentation do not increase the fix count.
 
 | # | Fix | Upstream review |
 | --- | --- | --- |
@@ -21,6 +21,7 @@ Want to help with Java, CUDA, JNI, testing or build setup? Start with [CONTRIBUT
 | 8 | **Build:** replace rejected Java 7 compiler options with an explicit Java 8 baseline | [jcuda-parent draft #2](https://github.com/jcuda/jcuda-parent/pull/2) |
 | 9 | Preserve device-pointer offsets when creating and querying driver texture resource descriptors | [Draft #56](https://github.com/jcuda/jcuda/pull/56) |
 | 10 | **Diagnostics:** name combined memory-handle and graphics-registration flags instead of reporting INVALID | [Draft #57](https://github.com/jcuda/jcuda/pull/57) |
+| 11 | Fix JNI field/handle errors and missing location values in the virtual-memory allocation/property workflow | [Draft #58](https://github.com/jcuda/jcuda/pull/58) |
 
 See the [verified inventory](docs/CONTRIBUTION_INVENTORY.md) for before/after evidence and testing limits. At 20 distinct verified fixes: the Beautiful Java contributor report, then [original JCuda GPU art](docs/BEAUTIFUL_JAVA_ROADMAP.md). Join in with a focused, reproducible contribution; upstream review and release decisions remain with the original project.
 
