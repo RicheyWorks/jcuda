@@ -33,7 +33,19 @@ import jcuda.LibUtilsCuda;
 import jcuda.LogLevel;
 
 /**
- * JNvPTXCompiler
+ * JNvPTXCompiler.
+ * <p>
+ * Byte lengths and option counts must be nonnegative and must not exceed
+ * their backing array lengths. Prefixes are supported. Requested option
+ * entries must be non-null. Output byte arrays must hold the complete size
+ * returned by the corresponding size query; larger arrays retain their tail.
+ * Version and size output arrays must have at least one element.
+ * Invalid capacities throw {@link IllegalArgumentException}, independently
+ * of the CUDA exception setting. Null arguments or requested options throw
+ * {@link NullPointerException}. Failed native size/version queries leave
+ * outputs unchanged.
+ * <p>
+ * Serialize compilation/destruction against queries using the same handle.
  */
 public class JNvPTXCompiler
 {
