@@ -5,6 +5,10 @@ This is the **RicheyWorks contributor fork** of [upstream JCuda](https://github.
 
 Want to help with Java, CUDA, JNI, testing or build setup? Start with [CONTRIBUTING.md](CONTRIBUTING.md) and the [scoped starter proposals](docs/STARTER_ISSUES.md). Please check upstream issues and draft PRs before starting duplicate work.
 
+## Build and run on Windows
+
+See [the repeatable Windows build](docs/WINDOWS_BUILD.md) for matching fork Java/native JARs, a hash-checked launcher, and a tiny real GPU smoke test. It uses existing toolchain prerequisites and publishes no release.
+
 ## 🏆 Fix log
 
 **20 distinct fixes integrated in the RicheyWorks forks:** 19 runtime/API fixes (including diagnostic formatting) and 1 build fix. The combined stack passed 198 focused regression cases plus 9 optional round-trip checks; a tiny GPU kernel also passed. Historical upstream submissions remain unmerged; those links are records of individual patches, not a promise of upstream review. This source integration is not a binary release. See [integration and testing details](docs/FORK_INTEGRATION.md). Companion tests, documentation and the separately credited community dependency do not increase our count.

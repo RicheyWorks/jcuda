@@ -4,6 +4,7 @@
 /JCudaJava/.project
 /target
 /nativeLibraries
+/out/
 /.project
 /.settings
 /JCudaJava/src/test/resources/kernels/*.ptx
