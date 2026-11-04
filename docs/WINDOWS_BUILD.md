@@ -72,7 +72,7 @@ Replace placeholders. Use `-ApplicationArguments @('first','second')` for applic
 
 The real smoke loads driver/runtime/NVRTC/PTX-compiler JNI, checks CUDA12.6 component versions, compiles a tiny kernel with NVRTC, then computes `y=2*x+1` for64 floats on the4090. All64 are checked bit-exactly: first1.0, last64.0, sum2080.0, zero mismatches. It allocates512 explicit device bytes and releases private context/module/buffers. No ingestion pause/reset is needed. PTX-compiler version/loading is checked; its separate compilation API is not exercised.
 
-The earlier integrated stack passed198 focused regressions plus9 optional mapping/window checks; those results are documented separately. This workflow's smoke is not the complete CUDA suite, multi-library reactor, benchmark, Linux validation, actual JDK8 runtime test or evidence of support for all devices/toolkits. Existing CMake/compiler warnings remain. Only the documented Windows/4090 setup has been run end to end.
+The newly packaged Java/native JARs also passed all198 focused regressions under JNI checking, with fresh extraction caches inherited by child JVMs and no official native JAR on the classpath. The matching launcher was checked with the real smoke. The earlier integrated source additionally passed9 optional mapping/window checks; those optional modes were not rerun against the new packaged JARs. This is not the complete CUDA suite, multi-library reactor, benchmark, Linux validation, actual JDK8 runtime test or evidence of support for all devices/toolkits. Existing CMake/compiler warnings remain. Only the documented Windows/4090 setup has been run end to end.
 
 ## License and attribution
 

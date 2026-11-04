@@ -74,6 +74,7 @@ $rtc = $NvrtcRoot.Replace('\','/')
 $compiler = $NvccRoot.Replace('\','/')
 $modules = @('JCudaDriver','JCudaRuntime','JNvrtc','JNvPTXCompiler')
 $dlls = @()
+$nativeCompilers = @()
 foreach ($module in $modules) {
     $build = Join-Path $BuildRoot ('native/' + $module)
     $options = @('-S',(Join-Path $repo ($module+'JNI')),'-B',$build,'-G','Visual Studio 17 2022','-A','x64',
@@ -86,9 +87,17 @@ foreach ($module in $modules) {
     Run 'cmake' $options (Join-Path $run ($module+'-configure1.log'))
     Run 'cmake' $options (Join-Path $run ($module+'-configure2.log'))
     $cache = [IO.File]::ReadAllText((Join-Path $build 'CMakeCache.txt'))
-    foreach ($expected in @("CUDA_TOOLKIT_INCLUDE:PATH=$sdk/include", "CUDA_nvrtc_LIBRARY:FILEPATH=$rtc/lib/x64/nvrtc.lib")) {
-        if (-not $cache.Contains($expected)) { throw "Unexpected CMake selection: $expected" }
+    $expectedPaths = @{CUDA_TOOLKIT_INCLUDE="$sdk/include";CUDA_CUDA_LIBRARY="$sdk/lib/x64/cuda.lib";
+        CUDA_CUDART_LIBRARY="$sdk/lib/x64/cudart.lib";CUDA_nvrtc_LIBRARY="$rtc/lib/x64/nvrtc.lib";
+        CUDA_nvptxcompiler_static_LIBRARY="$compiler/lib/x64/nvptxcompiler_static.lib";CUDA_NVCC_EXECUTABLE="$compiler/bin/nvcc.exe"}
+    foreach ($key in $expectedPaths.Keys) {
+        $selected = [regex]::Match($cache, '(?m)^'+[regex]::Escape($key)+':[^=]+=(.*)$')
+        if (-not $selected.Success -or $selected.Groups[1].Value.Trim() -ne $expectedPaths[$key]) { throw "Unexpected CMake selection: $key" }
     }
+    $compilerInfo = Get-ChildItem (Join-Path $build 'CMakeFiles') -Recurse -Filter 'CMakeCXXCompiler.cmake' | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+    $compilerText = [IO.File]::ReadAllText($compilerInfo.FullName)
+    $nativeCompilers += @{module=$module;version=[regex]::Match($compilerText,'set\(CMAKE_CXX_COMPILER_VERSION "([^"]+)"\)').Groups[1].Value;
+        executable=[regex]::Match($compilerText,'set\(CMAKE_CXX_COMPILER "([^"]+)"\)').Groups[1].Value}
     Run 'cmake' @('--build',$build,'--config','Release') (Join-Path $run ($module+'-build.log'))
     $name = "$module-12.6.0-windows-x86_64.dll"
     $dll = Join-Path $repo ("nativeLibraries/windows/x86_64/lib/$name")
@@ -111,7 +120,7 @@ Run $jar $jarArgs (Join-Path $run 'jar-native.log')
 $manifest = [ordered]@{schema=1;coreCommit=$head;commonCommit=$commonHead;parentCommit=$parentHead;coreDirty=$dirty;
     commonDirty=(@(& git -C $common status --porcelain).Count -gt 0);parentDirty=(@(& git -C $parent status --porcelain).Count -gt 0);
     javaCompiler=$javaVersion;nvcc=$nvccVersion;cmake=((& cmake --version | Select-Object -First 1) -join '');
-    javaRelease=8;configuration='Release/x64';modules=$modules;runDirectory=$run;
+    javaRelease=8;configuration='Release/x64';modules=$modules;nativeCompilers=$nativeCompilers;runDirectory=$run;
     cudaRoot=$CudaRoot;nvrtcRoot=$NvrtcRoot;nvccRoot=$NvccRoot;
     javaJar=[IO.Path]::GetFileName($javaJar);nativeJar=[IO.Path]::GetFileName($nativeJar);
     artifacts=@(@($javaJar,$nativeJar) | ForEach-Object { @{name=[IO.Path]::GetFileName($_);sha256=(Get-FileHash -LiteralPath $_).Hash.ToLowerInvariant()} });
