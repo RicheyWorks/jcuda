@@ -9,6 +9,8 @@ Want to help with Java, CUDA, JNI, testing or build setup? Start with [CONTRIBUT
 
 See [the repeatable Windows build](docs/WINDOWS_BUILD.md) for matching fork Java/native JARs, a hash-checked launcher, and a tiny real GPU smoke test. It uses existing toolchain prerequisites and publishes no release.
 
+For Java-only verification, install the sibling parent and run `mvn -f JCudaJava/pom.xml -Pcpu-tests test`: **113 checks without a GPU**. See [CPU test prerequisites and scope](docs/CPU_TESTS.md).
+
 ## 🏆 Fix log
 
 **20 distinct fixes integrated in the RicheyWorks forks:** 19 runtime/API fixes (including diagnostic formatting) and 1 build fix. The combined stack passed 198 focused regression cases plus 9 optional round-trip checks; a tiny GPU kernel also passed. Historical upstream submissions remain unmerged; those links are records of individual patches, not a promise of upstream review. This source integration is not a binary release. See [integration and testing details](docs/FORK_INTEGRATION.md). Companion tests, documentation and the separately credited community dependency do not increase our count.

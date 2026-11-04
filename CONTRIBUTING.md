@@ -23,10 +23,10 @@ For other CUDA libraries and full native packaging, consult the original [jcuda-
 
 ## Select tests deliberately
 
-Java-only example:
+Java-only example (113 cases; see [CPU_TESTS.md](docs/CPU_TESTS.md)):
 
 ```powershell
-mvn -f JCudaJava/pom.xml '-Dtest=PointerBufferStateTest,PointerByteBufferOffsetTest,PointerCharBufferTest,LibUtilsExtractionTest,SizeofPointerTest,FlagCombinationStringTest' test
+mvn -f JCudaJava/pom.xml -Pcpu-tests test
 ```
 
 Native changes require rebuilding the relevant JNI library against integrated `jcuda-common`. Inspect CMake's CUDA/JNI includes and import libraries: a toolkit directory name alone does not prove a complete installation. Make dependent CUDA/NVRTC DLLs available to the test process as needed.

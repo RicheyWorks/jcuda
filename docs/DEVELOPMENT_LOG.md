@@ -19,3 +19,7 @@ mvn -f JCudaJava/pom.xml '-Dtest=JCudaPrimaryContextLifetimeTest,JCudaDriverPrim
 ```
 
 Use [WINDOWS_BUILD.md](WINDOWS_BUILD.md) for prerequisites and matching fork artifact loading. This focused Maven invocation also needs its declared dependencies and integrated parent resolved normally.
+
+## 2026-11-04: one-command CPU suite and heap-buffer coverage
+
+The cpu-tests Maven profile selects 113 Java-only checks, including 35 new heap-buffer cases across seven primitive types and five layouts. All pass on Temurin 22.0.2 and Oracle 21.0.4 with Maven 3.9.9. A deliberate ignored-array-offset mutation caused 21 expected failures and was restored; no production defect is claimed. JDK 21 library traces found no JCuda/NVIDIA loads across Maven and child JVMs. See [CPU_TESTS.md](CPU_TESTS.md) for commands, scope and limits. A remote CI job remains unimplemented. This usability/coverage contribution does not increase the original twenty-fix count.

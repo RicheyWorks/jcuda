@@ -35,4 +35,31 @@
 
     </dependencies>
 
+    <profiles>
+        <!-- Explicit Java-only selection; the normal device suite is unchanged. -->
+        <profile>
+            <id>cpu-tests</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>3.2.5</version>
+                        <configuration>
+                            <failIfNoTests>true</failIfNoTests>
+                            <includes>
+                                <include>**/PointerBufferStateTest.java</include>
+                                <include>**/PointerByteBufferOffsetTest.java</include>
+                                <include>**/PointerCharBufferTest.java</include>
+                                <include>**/PointerHeapBufferTest.java</include>
+                                <include>**/LibUtilsExtractionTest.java</include>
+                                <include>**/SizeofPointerTest.java</include>
+                                <include>**/FlagCombinationStringTest.java</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
