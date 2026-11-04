@@ -1,0 +1,189 @@
+{
+  "shared_commit": "76c38070e825f5e0bf109bb7f0ce895a8e454006",
+  "parent_commit": "eeb0008654cd96acdb16f596dd8109a760b9664e",
+  "community_stream_input_commit": "a6908ccb637e025e8dcec629cc13961d1e02ff05",
+  "counted_fixes": [
+    {
+      "fix": 1,
+      "url": "https://github.com/jcuda/jcuda/pull/49",
+      "status": "OPEN DRAFT",
+      "merged": false,
+      "head": "59e86f50a0e3c7545c9cfa53e9f5cc6a7740625f",
+      "branch": "fix/preserve-direct-buffer-marks",
+      "repository": "jcuda/jcuda"
+    },
+    {
+      "fix": 2,
+      "url": "https://github.com/jcuda/jcuda/pull/50",
+      "status": "OPEN DRAFT",
+      "merged": false,
+      "head": "fbb2d5fdcb79d5436e2c7f32951e234d5c0a9604",
+      "branch": "fix/byte-buffer-pointer-offset",
+      "repository": "jcuda/jcuda"
+    },
+    {
+      "fix": 3,
+      "url": "https://github.com/jcuda/jcuda/pull/51",
+      "status": "OPEN DRAFT",
+      "merged": false,
+      "head": "bc74cf3ad4c5b60ed6f7c8eacb709adf482e51b1",
+      "branch": "fix/char-buffer-pointer-support",
+      "repository": "jcuda/jcuda"
+    },
+    {
+      "fix": 4,
+      "url": "https://github.com/jcuda/jcuda/pull/52",
+      "status": "OPEN DRAFT",
+      "merged": false,
+      "head": "453413974e139dec17710e42c9afc4830e060e06",
+      "branch": "fix/null-current-context",
+      "repository": "jcuda/jcuda"
+    },
+    {
+      "fix": 5,
+      "url": "https://github.com/jcuda/jcuda-common/pull/4",
+      "status": "OPEN DRAFT",
+      "merged": false,
+      "head": "76c38070e825f5e0bf109bb7f0ce895a8e454006",
+      "branch": "fix/critical-array-release-mode",
+      "repository": "jcuda/jcuda-common"
+    },
+    {
+      "fix": 6,
+      "url": "https://github.com/jcuda/jcuda/pull/54",
+      "status": "OPEN DRAFT",
+      "merged": false,
+      "head": "55cc47096e264232f677cbfa84c27dee5dd06a43",
+      "branch": "fix/failed-library-extraction",
+      "repository": "jcuda/jcuda"
+    },
+    {
+      "fix": 7,
+      "url": "https://github.com/jcuda/jcuda/pull/55",
+      "status": "OPEN DRAFT",
+      "merged": false,
+      "head": "a1046845a813ff8ca64e3643794eb82c03526bc5",
+      "branch": "fix/pointer-size-model-fallback",
+      "repository": "jcuda/jcuda"
+    },
+    {
+      "fix": 8,
+      "url": "https://github.com/jcuda/jcuda-parent/pull/2",
+      "status": "OPEN DRAFT",
+      "merged": false,
+      "head": "eeb0008654cd96acdb16f596dd8109a760b9664e",
+      "branch": "fix/java8-compiler-baseline",
+      "repository": "jcuda/jcuda-parent"
+    },
+    {
+      "fix": 9,
+      "url": "https://github.com/jcuda/jcuda/pull/56",
+      "status": "OPEN DRAFT",
+      "merged": false,
+      "head": "7cc8b7af1d0078907a8433fceaae693b496ce2d5",
+      "branch": "fix/resource-descriptor-pointer-offsets",
+      "repository": "jcuda/jcuda"
+    },
+    {
+      "fix": 10,
+      "url": "https://github.com/jcuda/jcuda/pull/57",
+      "status": "OPEN DRAFT",
+      "merged": false,
+      "head": "37b7ce5cd7b1eca3745b0ec1a1cee9dd83476024",
+      "branch": "fix/combined-flag-strings",
+      "repository": "jcuda/jcuda"
+    },
+    {
+      "fix": 11,
+      "url": "https://github.com/jcuda/jcuda/pull/58",
+      "status": "OPEN DRAFT",
+      "merged": false,
+      "head": "5ce20451babd3d11726b71a4aee21eeffb152e6e",
+      "branch": "fix/allocation-property-marshalling",
+      "repository": "jcuda/jcuda"
+    },
+    {
+      "fix": 12,
+      "url": "https://github.com/jcuda/jcuda/pull/59",
+      "status": "OPEN DRAFT",
+      "merged": false,
+      "head": "61b23a0e52393631e7dc42f2436e022f22de3682",
+      "branch": "fix/sparse-array-tile-extent",
+      "repository": "jcuda/jcuda"
+    },
+    {
+      "fix": 13,
+      "url": "https://github.com/jcuda/jcuda/pull/60",
+      "status": "OPEN DRAFT",
+      "merged": false,
+      "head": "528cbcd85fdc0089ea1b136e6c9a0900ffdcb08a",
+      "branch": "fix/managed-memory-count-width",
+      "repository": "jcuda/jcuda"
+    },
+    {
+      "fix": 14,
+      "url": "https://github.com/jcuda/jcuda/pull/61",
+      "status": "OPEN DRAFT",
+      "merged": false,
+      "head": "29a9cd11a765e020d097b9a29c579153af8223a7",
+      "branch": "fix/device-property-array-copyback",
+      "repository": "jcuda/jcuda"
+    },
+    {
+      "fix": 15,
+      "url": "https://github.com/jcuda/jcuda/pull/62",
+      "status": "OPEN DRAFT",
+      "merged": false,
+      "head": "997dbbd3b6aaea241024b473d5fb64bacb792b38",
+      "branch": "fix/device-name-output-bounds",
+      "repository": "jcuda/jcuda"
+    },
+    {
+      "fix": 16,
+      "url": "https://github.com/jcuda/jcuda/pull/63",
+      "status": "OPEN DRAFT",
+      "merged": false,
+      "head": "22c511fff5d9fa704cb6ca2d89c555aafce82b9e",
+      "branch": "fix/access-descriptor-location",
+      "repository": "jcuda/jcuda"
+    },
+    {
+      "fix": 17,
+      "url": "https://github.com/jcuda/jcuda/pull/64",
+      "status": "OPEN DRAFT",
+      "merged": false,
+      "head": "a8bb7567a53440d1dedc5617760310a2bff20a73",
+      "branch": "fix/graph-query-capacities",
+      "repository": "jcuda/jcuda"
+    },
+    {
+      "fix": 18,
+      "url": "https://github.com/jcuda/jcuda/pull/65",
+      "status": "OPEN DRAFT",
+      "merged": false,
+      "head": "6562d9fd182d68a3e4690d8f4b5cc886a8a55f88",
+      "branch": "fix/stream-window-output",
+      "repository": "jcuda/jcuda"
+    },
+    {
+      "fix": 19,
+      "url": "https://github.com/jcuda/jcuda/pull/66",
+      "status": "OPEN DRAFT",
+      "merged": false,
+      "head": "b9d8e57bfc092b0c96d8216cd68ec4d7348d7080",
+      "branch": "fix/nvrtc-lowered-name-errors",
+      "repository": "jcuda/jcuda"
+    },
+    {
+      "fix": 20,
+      "url": "https://github.com/jcuda/jcuda/pull/67",
+      "status": "OPEN DRAFT",
+      "merged": false,
+      "head": "0ef46474fb9cdee4e94a5214e02b1390aff1ba9d",
+      "branch": "fix/nvrtc-binary-output-capacity",
+      "repository": "jcuda/jcuda"
+    }
+  ],
+  "code_integration_commit": "7f0c57fd19095bfb74c4f3d91b6a127a2a565978",
+  "note": "Historical upstream status fields are snapshots from the original report; current integration is in the RicheyWorks forks, not upstream."
+}

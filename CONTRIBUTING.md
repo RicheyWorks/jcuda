@@ -1,106 +1,46 @@
-# Contributing
+# Contributing to the RicheyWorks JCuda fork
 
-This is **RicheyWorks' contributor fork** of [JCuda](https://github.com/jcuda/jcuda), the Java bindings for NVIDIA CUDA. The original project and its maintainer remain upstream. This fork is a place to develop focused changes and submit them for upstream review; it is not an official replacement or a new JCuda release.
+This is a development fork of [JCuda](https://github.com/jcuda/jcuda), originally by Marco Hutter and community contributors. Preserve the MIT license and attribution. Development and integration now happen in the RicheyWorks forks; historical upstream PR links document individual patches. We are not submitting further upstream PRs or promising upstream review, acceptance or releases.
 
-Java, CUDA and JNI developers are welcome. A useful contribution can be a reproducible bug, a focused regression test, a small binding fix, or a verified build improvement. Review the [starter proposals](docs/STARTER_ISSUES.md) before claiming work; they are proposals, not assigned or already published upstream issues.
+The twenty verified changes are combined here and in two shared dependencies. Read [the integration record](docs/FORK_INTEGRATION.md) and [fix inventory](docs/CONTRIBUTION_INVENTORY.md). Documentation and GPU art do not count as additional binding fixes. This is source integration, not a published Maven/native binary release.
 
-Follow the [verified contribution inventory](docs/CONTRIBUTION_INVENTORY.md) for fix counts, PR states and test limits, and the [Beautiful Java milestones](docs/BEAUTIFUL_JAVA_ROADMAP.md) for the 20-fix report and later GPU-art plan.
+## Obtain the integrated source
 
-## Before changing code
-
-1. Search [upstream issues](https://github.com/jcuda/jcuda/issues) and [open pull requests](https://github.com/jcuda/jcuda/pulls), including discussion comments. A complete proposed fix may exist in a comment even without a PR.
-2. Read the upstream [build instructions](https://github.com/jcuda/jcuda-main/blob/master/BUILDING.md). `jcuda-main` is the aggregate build; this repository contains the core Java and JNI bindings. The shared parent and native utilities live in sibling repositories.
-3. Start one branch per independent change from current upstream `master`. Preserve other contributors' branches and work. Open draft PRs early when there is a concrete patch and honest validation evidence.
-
-## Obtain the source
-
-Use a fresh working directory. Clone the relevant projects as siblings:
+Clone the relevant forks as siblings in a fresh directory:
 
 ```powershell
-git clone https://github.com/jcuda/jcuda-parent.git
-git clone https://github.com/jcuda/jcuda-common.git
+git clone https://github.com/RicheyWorks/jcuda-parent.git
+git clone https://github.com/RicheyWorks/jcuda-common.git
 git clone https://github.com/RicheyWorks/jcuda.git
 cd jcuda
-git remote add upstream https://github.com/jcuda/jcuda.git
-git fetch upstream
-git switch -c my-focused-fix upstream/master
-```
-
-For the complete set of libraries and native packaging, clone the additional repositories listed in `jcuda-main/BUILDING.md`. Do not assume cloning only `jcuda-main` downloads its sibling projects.
-
-## Build and test the Java change
-
-Upstream currently declares version **12.6.0**. Its parent POM configures Java 7 source/target, while some source uses Java 8 APIs. JDK 8 is the expected baseline for that configuration, but we have not verified this checkout on a JDK 8 host. A newer JDK may reject the compiler target; our JDK 22 build did. Changing the parent locally to Java 8 allowed our focused validation, but that was an isolated verification adaptation, not an upstream build fix or supported-version claim.
-
-There is now a separate proposed parent build fix, [jcuda-parent #2](https://github.com/jcuda/jcuda-parent/pull/2), targeting Java 8. Fresh core compilation passed on JDK 21 and 22, and the 48 Java-only regression cases passed on JDK 21 with that parent installed normally. Rebuilt artifacts require Java 8 or newer; no JDK 8 runtime or full packaging/reactor certification is implied.
-
-To opt into that **unmerged proposal** from the fresh sibling layout above, fetch its source branch before installing the parent:
-
-```powershell
-git -C ../jcuda-parent fetch https://github.com/RicheyWorks/jcuda-parent.git fix/java8-compiler-baseline
-git -C ../jcuda-parent switch -c try-java8-parent FETCH_HEAD
-```
-
-With the chosen JDK and Maven available, install the parent before building this Java module:
-
-```powershell
 mvn -f ../jcuda-parent/pom.xml install
 mvn -f JCudaJava/pom.xml test-compile
 ```
 
-The module resolves a platform-specific `jcuda-natives` dependency. Compilation alone does not load CUDA; executing the existing CUDA tests does. For a specific regression, select its test class rather than accidentally running the full GPU suite:
+The parent targets Java 8. Compilation and focused checks have run on newer JDKs; an actual JDK 8 runtime and the complete multi-repository reactor are not certified. Resolve declared dependencies normally; offline mode requires an existing cache. Do not commit caches or machine-specific paths.
+
+For other CUDA libraries and full native packaging, consult the original [jcuda-main build instructions](https://github.com/jcuda/jcuda-main/blob/master/BUILDING.md). These three repositories cover the focused core source work, not every aggregate binding.
+
+## Select tests deliberately
+
+Java-only example:
 
 ```powershell
-mvn -f JCudaJava/pom.xml '-Dtest=YourRegressionTest' test
+mvn -f JCudaJava/pom.xml '-Dtest=PointerBufferStateTest,PointerByteBufferOffsetTest,PointerCharBufferTest,LibUtilsExtractionTest,SizeofPointerTest,FlagCombinationStringTest' test
 ```
 
-Replace `YourRegressionTest` with an actual test on your branch. An offline build (`-o`) only works once all required artifacts are cached. Do not commit local repository caches, generated classes, native binaries, or machine-specific paths.
+Native changes require rebuilding the relevant JNI library against integrated `jcuda-common`. Inspect CMake's CUDA/JNI includes and import libraries: a toolkit directory name alone does not prove a complete installation. Make dependent CUDA/NVRTC DLLs available to the test process as needed.
 
-## Native and GPU verification
+```powershell
+mvn -f JCudaJava/pom.xml '-Dtest=JNvrtcBinaryCapacityTest' '-DargLine=-Xcheck:jni -Djava.library.path=<rebuilt-JNI-directory>' test
+```
 
-Native changes need CMake, a compatible C++ toolchain, JNI headers, and matching CUDA headers and import libraries. Use upstream's native build instructions. Inspect the CMake configuration and cache: an older CUDA version on `PATH` can be selected even when a newer toolkit directory was intended. A directory named `v12.6` is not proof that the complete toolkit is installed.
+Replace the placeholder. Use JVM library logging to confirm which DLL loaded. Maven's published 12.6 native JAR does not contain this fork's JNI fixes. Java compilation or a test against that old binary does not validate changed native code. See the integration record for optional mapped-memory and nondefault stream-window checks.
 
-Build and load the **changed** JNI library for native regressions. Passing Java compilation or running against Maven's previously published native JAR does not validate a JNI patch. Report the library path and how the JVM selected it. Record CUDA toolkit/header version separately from the GPU driver version.
+GPU tests should use private resources, bounded workloads and `finally` cleanup. Coordinate any needed pause with the workload owner; never reset the device or modify unrelated assets. Avoid invoking the entire device suite accidentally.
 
-Run GPU tests only when the machine's current workload permits it. Prefer isolated test threads, tiny allocations, no unnecessary kernels, and `finally` cleanup. Check available memory and coordinate any needed pause with the workload owner; do not interrupt or overwrite saved assets. A test may require an NVIDIA driver/device even when it launches no kernels.
+## Make a focused contribution
 
-## Current review work
+Check fork issues, branches and historical upstream work, including proposed patches in discussion comments, to avoid duplication. Start one branch from this fork's current `master` per independent defect. Include a failing reproduction, relevant native contract, tests/results and unrun checks. Preserve existing style, copyright and license notices.
 
-These are **draft proposals**, not merged fixes or released behavior:
-
-| Upstream PR | Behavior | Evidence |
-| --- | --- | --- |
-| [#49](https://github.com/jcuda/jcuda/pull/49) | Preserve direct-buffer marks in `Pointer.toBuffer` | 13 focused no-CUDA regression cases |
-| [#50](https://github.com/jcuda/jcuda/pull/50) | Honor stored pointer offsets in `getByteBuffer` views | 12 focused no-CUDA regression cases |
-| [#51](https://github.com/jcuda/jcuda/pull/51) | Accept `CharBuffer` in `Pointer.toBuffer` | 6 focused no-CUDA regression cases |
-| [#52](https://github.com/jcuda/jcuda/pull/52) | Allow `cuCtxSetCurrent(null)` per the CUDA contract | 2 driver-context tests against a freshly built JNI DLL, with JNI checking |
-| [jcuda-common #4](https://github.com/jcuda/jcuda-common/pull/4) | Preserve requested critical-array copy-back mode | Companion [jcuda #53](https://github.com/jcuda/jcuda/pull/53): 12 tiny native-transfer cases pass under JNI checking after the shared fix |
-| [#54](https://github.com/jcuda/jcuda/pull/54) | Clean up incomplete library-resource extraction so retries can succeed | 3 no-CUDA cases, including an injected mid-read failure followed by successful retry |
-| [#55](https://github.com/jcuda/jcuda/pull/55) | Fall back to known architecture when the pointer-size model property is unavailable | 14 no-CUDA cases in isolated JVMs; simulated properties, not hardware certification |
-| [jcuda-parent #2](https://github.com/jcuda/jcuda-parent/pull/2) | Fix rejected Java 7 compiler settings with an explicit Java 8 baseline | Fresh core compilation on JDK 21/22; 48 Java-only cases on JDK 21; rebuilt classfiles require Java 8 |
-| [jcuda #56](https://github.com/jcuda/jcuda/pull/56) | Preserve driver texture resource device-pointer offsets | 8 GPU descriptor cases pass under JNI checking; 4 fail before; no sampling kernels |
-| [jcuda #57](https://github.com/jcuda/jcuda/pull/57) | Format combined handle and graphics-registration flag names | 30 CPU-only cases; 15 fail before, all pass after; all 78 Java-only integration cases pass on JDK 21 |
-| [jcuda #58](https://github.com/jcuda/jcuda/pull/58) | Fix virtual-memory allocation/property JNI marshalling | 3 isolated JNI-checked cases; all fail before and pass after; 2 MiB allocation/query/release, no mapping or kernels |
-| [jcuda #59](https://github.com/jcuda/jcuda/pull/59) | Populate sparse tile dimensions in fresh query results | 4 JNI-checked cases; 2 fail before, all pass after; no physical tile backing mapped or kernels |
-| [jcuda #60](https://github.com/jcuda/jcuda/pull/60) | Preserve managed-memory count width on Win64 | 6 JNI-checked driver/runtime advice cases; 4 fail before, all pass after; only 64 KiB allocated; prefetch not executed |
-| [jcuda #61](https://github.com/jcuda/jcuda/pull/61) | Preserve device identity byte-array outputs with copied JNI storage | 3 comparisons pass normally/fail under checking before, all pass under checking after; metadata only; Windows WDDM LUID |
-| [jcuda #62](https://github.com/jcuda/jcuda/pull/62) | Guard device-name output array bounds before native access | 6 isolated JNI-checked cases; 2 fail before, all pass after; no context creation or GPU data allocation |
-| [jcuda #63](https://github.com/jcuda/jcuda/pull/63) | Correct nested access-descriptor location reads | 3 independent cases fail before/pass after; separate #58 integration checks none/read/read-write on 2 MiB mappings, no data access |
-| [jcuda #64](https://github.com/jcuda/jcuda/pull/64) | Honor capacities in five driver graph enumeration APIs | 37 isolated JNI-checked cases; 32 fail before, all pass after; graph metadata only, no launch or data buffers |
-| [jcuda #65](https://github.com/jcuda/jcuda/pull/65) | Correct driver/runtime stream-window output conversion | 6 independent cases; 4 fail before, all pass after. Separate PR48 fixture verifies 256-byte nondefault window round-trips; no kernels |
-| [jcuda #66](https://github.com/jcuda/jcuda/pull/66) | Preserve lowered-name errors without converting invalid output pointers | 6 CPU-only NVRTC cases; 4 fail before, all pass after; no generated code loaded |
-| [jcuda #67](https://github.com/jcuda/jcuda/pull/67) | Bound four NVRTC binary-output getters by Java array capacity | 24 isolated CPU-only cases; 8 undersized-buffer failures before, all pass after; no GPU execution |
-
-The three Java Pointer patches (#49–#51) applied together without conflicts and passed their combined 31 cases in an isolated local worktree. Those Maven runs used the disclosed task-local Java 8 parent adaptation under JDK 22. Native transfers and the complete CUDA suite were not part of those 31 tests. Each PR branch remains independent of the others.
-
-PR #52 was checked separately on Windows x86_64 with an RTX 4090 and driver 617.42. Its context tests run on isolated CPU threads, launch no kernels, and destroy the temporary context. The native build used existing MSVC plus checksum-verified official CUDA 12.6 headers/import libraries extracted into the workspace because the local 12.6 toolkit folder was incomplete. This is not evidence that a full CUDA 12.6 toolkit or the complete CUDA test suite was validated.
-
-## What to include in a contribution
-
-- A concrete before/after example and the relevant CUDA API contract for binding changes.
-- A regression that fails for the old behavior, plus the exact commands and results for the fix.
-- OS/architecture, JDK, Maven, CUDA headers/toolkit and driver details when relevant.
-- Any unrun checks, local build adaptations, hardware requirements, or compatibility changes.
-- Only related source/test changes, preserving the repository's existing style and license notices.
-
-Use your own fork for publication unless you have explicit write access here. Target upstream for changes intended for JCuda itself; respect its maintainer's review and release decisions. No PR, fork, test result, or social post implies upstream endorsement.
+Submit authorized review work to this fork or keep a local reviewable patch. Do not send unsolicited messages or submit our work upstream. [Starter proposals](docs/STARTER_ISSUES.md) are ideas, not assignments or guarantees that work remains unaddressed; reassess them against integrated source first.

@@ -1,15 +1,15 @@
 # jcuda
 JCuda - Java bindings for CUDA
 
-This is the **RicheyWorks contributor fork** of [upstream JCuda](https://github.com/jcuda/jcuda). We develop focused patches for upstream review; this fork is not an official release or replacement for the original project.
+This is the **RicheyWorks contributor fork** of [upstream JCuda](https://github.com/jcuda/jcuda). The verified changes are now combined in this fork for its own development. This is not an official JCuda release; the original project and MIT attribution are preserved.
 
 Want to help with Java, CUDA, JNI, testing or build setup? Start with [CONTRIBUTING.md](CONTRIBUTING.md) and the [scoped starter proposals](docs/STARTER_ISSUES.md). Please check upstream issues and draft PRs before starting duplicate work.
 
 ## 🏆 Fix log
 
-**20 distinct fixes implemented and verified, proposed upstream; 0 merged.** This includes 19 runtime/API fixes (including diagnostic formatting) and 1 reproduced build fix. These are draft contributions from this fork, not released JCuda behavior or upstream endorsement. Status checked 2026-11-04. Companion tests and documentation do not increase the fix count.
+**20 distinct fixes integrated in the RicheyWorks forks:** 19 runtime/API fixes (including diagnostic formatting) and 1 build fix. The combined stack passed 198 focused regression cases plus 9 optional round-trip checks; a tiny GPU kernel also passed. Historical upstream submissions remain unmerged; those links are records of individual patches, not a promise of upstream review. This source integration is not a binary release. See [integration and testing details](docs/FORK_INTEGRATION.md). Companion tests, documentation and the separately credited community dependency do not increase our count.
 
-| # | Fix | Upstream review |
+| # | Fix | Historical upstream draft |
 | --- | --- | --- |
 | 1 | Preserve direct-buffer marks when creating position-aware pointers | [Draft #49](https://github.com/jcuda/jcuda/pull/49) |
 | 2 | Honor stored pointer offsets in both `getByteBuffer` views | [Draft #50](https://github.com/jcuda/jcuda/pull/50) |
@@ -32,7 +32,7 @@ Want to help with Java, CUDA, JNI, testing or build setup? Start with [CONTRIBUT
 | 19 | Return NVRTC lowered-name errors without reading an invalid output pointer or reporting false out-of-memory | [Draft #66](https://github.com/jcuda/jcuda/pull/66) |
 | 20 | Reject undersized NVRTC binary-output arrays before native writes | [Draft #67](https://github.com/jcuda/jcuda/pull/67) |
 
-See the [verified inventory](docs/CONTRIBUTION_INVENTORY.md) for before/after evidence and testing limits. At 20 distinct verified fixes: the Beautiful Java contributor report, then [original JCuda GPU art](docs/BEAUTIFUL_JAVA_ROADMAP.md). Join in with a focused, reproducible contribution; upstream review and release decisions remain with the original project.
+See the [verified inventory](docs/CONTRIBUTION_INVENTORY.md) for before/after evidence and testing limits. The 20-fix report was prepared privately; the next milestone is [original JCuda GPU art](docs/BEAUTIFUL_JAVA_ROADMAP.md). Join in with a focused, reproducible contribution; upstream review and release decisions remain with the original project.
 
 Refer to [jcuda-main](https://github.com/jcuda/jcuda-main) for further
 information and build instructions.

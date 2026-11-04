@@ -1,12 +1,12 @@
 # Beautiful Java contribution inventory
 
-Snapshot verified **2026-11-04**. This is a running record of proposals from this contributor fork, not a claim that upstream has accepted them. Refresh PR status before sharing a report.
+Source integration checked **2026-11-04**. **All 20 distinct fixes are now combined in the RicheyWorks forks** (19 runtime/API and 1 build); the original upstream submissions remain unmerged draft history. See [FORK_INTEGRATION.md](FORK_INTEGRATION.md) for combined tests, dependency attribution and limits. We are developing this fork independently and are not submitting more upstream PRs. No binary release is published.
 
-**Milestone count: 20 distinct implemented and verified proposed fixes out of 20: 19 runtime/API fixes (including diagnostic formatting) and 1 build fix. Upstream merged fixes: 0.** All twenty remain draft proposals. The missing `CharBuffer` path is counted once as an API omission fix; the two `getByteBuffer` overloads are one fix, and the shared-JNI fix plus its companion test PR are one fix.
+The table below preserves the individual before/after evidence and historical PR links. Companion PR53, documentation and the community stream-input dependency are not additional fixes. Combined stack: 198 focused checks pass, plus 9 optional round trips and one 64-element GPU computation. These results do not replace the limits below.
 
 ## Counted fixes
 
-| # | Behavior addressed | Upstream draft PR | Verification and limits |
+| # | Behavior addressed | Historical upstream draft | Verification and limits |
 | --- | --- | --- | --- |
 | 1 | `Pointer.toBuffer` discards a direct buffer's saved mark | [jcuda #49](https://github.com/jcuda/jcuda/pull/49) | 13 no-CUDA cases fail before and pass after; six supported types, slices and a read-only direct buffer |
 | 2 | Both `getByteBuffer` overloads ignore the pointer's stored offset | [jcuda #50](https://github.com/jcuda/jcuda/pull/50) | 12 no-CUDA cases; 8 fail before, all pass after; includes ranges, shared memory and overflow |
@@ -29,7 +29,7 @@ Snapshot verified **2026-11-04**. This is a running record of proposals from thi
 | 19 | NVRTC lowered-name failures convert an invalid native output pointer, hiding the error behind a false OutOfMemoryError | [jcuda #66](https://github.com/jcuda/jcuda/pull/66) | 6 isolated CPU-only compiler cases under -Xcheck:jni: 4 native-error cases fail before, all 6 pass after rebuilding JNvrtc with pristine upstream common. Invalid program, before compilation, unregistered expression and exceptions-enabled behavior preserve the output sentinel; success survives program destruction and argument controls stay valid. No module load, GPU context/allocation/kernel, full suite, other OS or compiler versions tested |
 | 20 | Four NVRTC binary-output getters ignore Java array capacity, permitting native buffer overruns | [jcuda #67](https://github.com/jcuda/jcuda/pull/67) | 24 isolated CPU-only compiler cases under -Xcheck:jni: 8 empty/one-byte-short cases fail fatally before, all24 pass after with pristine upstream common; CUBIN, deprecated NVVM, LTO and OptiX IR counted once. Exact/padded outputs agree and padded tails/rejected buffers remain intact; invalid-program/null controls pass. No generated code loaded/launched, large-output/concurrent mutation/full-suite/cross-platform testing |
 
-All are independent branches from their respective upstream master. Fixes #1–#3 also applied together without conflicts and passed their combined 31 no-CUDA cases in an isolated worktree. Fix #10 also integrates cleanly with #1-#3, #6 and #7: all 78 Java-only cases pass together on JDK 21 using the proposed parent. Native tests were validated on their respective native builds; do not describe the separate results as one complete CUDA-suite run.
+The original patches remain preserved on independent branches from their respective upstream master; their histories are also merged into this fork. Fixes #1–#3 also applied together without conflicts and passed their combined 31 no-CUDA cases in an isolated worktree. Fix #10 also integrates cleanly with #1-#3, #6 and #7: all 78 Java-only cases pass together on JDK 21 using the proposed parent. Historical per-fix native evidence below used separate builds. The new combined validation uses all three JNI libraries with the shared fix, but is still a focused suite, not the complete CUDA suite.
 
 Historical Java validation for fixes #1–#7 used declared JUnit 4.13.1, Temurin JDK 22, and an isolated local parent adjusted to Java 8 source/target because upstream's Java 7 compiler target was rejected. That adaptation is disclosed in those PRs and is not part of their source changes. Fix #8 captures the compiler-baseline change as a separate reviewable parent patch: its installed POM hash matches the source exactly, without a manually altered cache entry. The new 48-case JDK 21 run uses that proposed parent.
 

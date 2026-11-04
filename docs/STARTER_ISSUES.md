@@ -6,7 +6,7 @@ These are scoped proposals for discussion in the contributor fork. They have **n
 
 **Area:** Java tests. **Hardware:** none.
 
-The existing `TestPointerToBuffer` uses CUDA host-to-host copies and concentrates on float buffers. Add a separate, parameterized no-CUDA test for array-backed byte, short, int, long, float and double buffers, including nested slices and nonzero positions. Character buffers are being added in draft PR #51, so coordinate before adding that type.
+The existing `TestPointerToBuffer` uses CUDA host-to-host copies and concentrates on float buffers. Add a separate, parameterized no-CUDA test for array-backed byte, short, int, long, float and double buffers, including nested slices and nonzero positions. Character-buffer support is now integrated in this fork; include it when extending heap-buffer coverage.
 
 Draft [PR #53](https://github.com/jcuda/jcuda/pull/53) adds actual driver-transfer coverage, but needs CUDA hardware. This proposal is specifically the CPU-only construction layer for contributors and CI without a GPU.
 
@@ -20,9 +20,9 @@ Draft [PR #53](https://github.com/jcuda/jcuda/pull/53) adds actual driver-transf
 
 **Acceptance:** The test releases exactly the reference it acquired even when an assertion fails, and does not reset a shared primary context or destroy resources it does not own. Run the focused test when the GPU is available, report device/driver/native library versions, and explain any unavailable verification. Do not use device reset as cleanup.
 
-## 3. Add a CPU-only CI check once the test branches are integrated
+## 3. Add a CPU-only CI check for the integrated fork
 
-**Area:** CI/build. **Hardware:** none. **Dependency:** agreement on the Java compiler baseline and which pending test PRs to include.
+**Area:** CI/build. **Hardware:** none. **Dependency:** the Java 8 compiler baseline and focused test selection documented in FORK_INTEGRATION.md.
 
 Propose a minimal CI job that compiles the Java module and runs only explicitly identified no-CUDA tests. The three draft Pointer test classes in #49–#51 are candidate inputs; they are not yet in upstream `master`. The parent POM and Java compiler baseline need deliberate handling rather than an undocumented cache substitution.
 
