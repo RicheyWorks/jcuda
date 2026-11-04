@@ -18,10 +18,8 @@ The retained reference is now released in finally. Two isolated ownership regres
 
 ## 3. Add a CPU-only CI check for the integrated fork
 
-**Area:** CI/build. **Hardware:** none. **Dependency:** the Java 8 compiler baseline and focused test selection documented in FORK_INTEGRATION.md.
+**Area:** CI/build. **Hardware:** none. The Java8 parent baseline and focused Java-only test classes are already integrated in the RicheyWorks forks.
 
-Propose a minimal CI job that compiles the Java module and runs only explicitly identified no-CUDA tests. The three draft Pointer test classes in #49–#51 are candidate inputs; they are not yet in upstream `master`. The parent POM and Java compiler baseline need deliberate handling rather than an undocumented cache substitution.
+Propose a minimal job in this fork that obtains the actual parent, compiles the core and selects only PointerBufferStateTest, PointerByteBufferOffsetTest, PointerCharBufferTest, LibUtilsExtractionTest, SizeofPointerTest and FlagCombinationStringTest. These78 cases do not need a CUDA device; dependency resolution still needs the declared Maven artifacts. Do not submit this work upstream.
 
-The proposed [parent build fix #2](https://github.com/jcuda/jcuda-parent/pull/2) now gives a reviewable Java 8 baseline tested with JDK 21/22. It is still unmerged; evaluate that proposal explicitly rather than treating it as upstream's current policy.
-
-**Acceptance:** Pin the build environment, resolve/install the actual parent, print tool versions, select only tests that do not load CUDA, and publish clear test results. A clean runner must reproduce the job. Do not silently skip native tests and describe the result as full CUDA coverage, or change the upstream compiler target incidentally. Discuss an upstream CI proposal before expanding it across all repositories.
+**Acceptance:** Pin the runner/JDK and dependency sources, print versions, install the integrated parent normally, publish clear results and verify a clean runner. Do not silently skip native tests and call the result full CUDA coverage. This remains an unimplemented proposal, not a verified CI job.
