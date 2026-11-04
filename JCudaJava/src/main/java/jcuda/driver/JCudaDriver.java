@@ -13920,6 +13920,8 @@ public class JCudaDriver
      * @see JCudaDriver#cuGraphNodeGetType
      * @see JCudaDriver#cuGraphNodeGetDependencies
      * @see JCudaDriver#cuGraphNodeGetDependentNodes
+     * @throws IllegalArgumentException If the count array is empty, or an input
+     * capacity is negative or exceeds an output array length
      */
     public static int cuGraphGetNodes(CUgraph hGraph, CUgraphNode nodes[], long numNodes[]) 
     {
@@ -13954,6 +13956,8 @@ public class JCudaDriver
      * @see JCudaDriver#cuGraphNodeGetType
      * @see JCudaDriver#cuGraphNodeGetDependencies
      * @see JCudaDriver#cuGraphNodeGetDependentNodes
+     * @throws IllegalArgumentException If the count array is empty, or an input
+     * capacity is negative or exceeds an output array length
      */
     public static int cuGraphGetRootNodes(CUgraph hGraph, CUgraphNode rootNodes[], long numRootNodes[]) 
     {
@@ -13991,6 +13995,8 @@ public class JCudaDriver
      * @see JCudaDriver#cuGraphRemoveDependencies
      * @see JCudaDriver#cuGraphNodeGetDependencies
      * @see JCudaDriver#cuGraphNodeGetDependentNodes
+     * @throws IllegalArgumentException If the count array is empty, or an input
+     * capacity is negative or exceeds an output array length
      */
     public static int cuGraphGetEdges(CUgraph hGraph, CUgraphNode from[], CUgraphNode to[], long numEdges[]) 
     {
@@ -14025,6 +14031,8 @@ public class JCudaDriver
      * @see JCudaDriver#cuGraphGetEdges
      * @see JCudaDriver#cuGraphAddDependencies
      * @see JCudaDriver#cuGraphRemoveDependencies
+     * @throws IllegalArgumentException If the count array is empty, or an input
+     * capacity is negative or exceeds an output array length
      */
     public static int cuGraphNodeGetDependencies(CUgraphNode hNode, CUgraphNode dependencies[], long numDependencies[]) 
     {
@@ -14060,6 +14068,8 @@ public class JCudaDriver
      * @see JCudaDriver#cuGraphGetEdges
      * @see JCudaDriver#cuGraphAddDependencies
      * @see JCudaDriver#cuGraphRemoveDependencies
+     * @throws IllegalArgumentException If the count array is empty, or an input
+     * capacity is negative or exceeds an output array length
      */
     public static int cuGraphNodeGetDependentNodes(CUgraphNode hNode, CUgraphNode dependentNodes[], long numDependentNodes[]) 
     {
