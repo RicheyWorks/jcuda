@@ -78,6 +78,7 @@ These are **draft proposals**, not merged fixes or released behavior:
 | [#54](https://github.com/jcuda/jcuda/pull/54) | Clean up incomplete library-resource extraction so retries can succeed | 3 no-CUDA cases, including an injected mid-read failure followed by successful retry |
 | [#55](https://github.com/jcuda/jcuda/pull/55) | Fall back to known architecture when the pointer-size model property is unavailable | 14 no-CUDA cases in isolated JVMs; simulated properties, not hardware certification |
 | [jcuda-parent #2](https://github.com/jcuda/jcuda-parent/pull/2) | Fix rejected Java 7 compiler settings with an explicit Java 8 baseline | Fresh core compilation on JDK 21/22; 48 Java-only cases on JDK 21; rebuilt classfiles require Java 8 |
+| [jcuda #56](https://github.com/jcuda/jcuda/pull/56) | Preserve driver texture resource device-pointer offsets | 8 GPU descriptor cases pass under JNI checking; 4 fail before; no sampling kernels |
 
 The three Java Pointer patches (#49–#51) applied together without conflicts and passed their combined 31 cases in an isolated local worktree. Those Maven runs used the disclosed task-local Java 8 parent adaptation under JDK 22. Native transfers and the complete CUDA suite were not part of those 31 tests. Each PR branch remains independent of the others.
 

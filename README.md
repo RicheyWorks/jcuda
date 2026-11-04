@@ -7,7 +7,7 @@ Want to help with Java, CUDA, JNI, testing or build setup? Start with [CONTRIBUT
 
 ## 🏆 Fix log
 
-**8 distinct fixes implemented and verified, proposed upstream; 0 merged.** This includes 7 runtime/API fixes and 1 reproduced build fix. These are draft contributions from this fork, not released JCuda behavior or upstream endorsement. Status checked 2026-11-04. Companion tests and documentation do not increase the fix count.
+**9 distinct fixes implemented and verified, proposed upstream; 0 merged.** This includes 8 runtime/API fixes and 1 reproduced build fix. These are draft contributions from this fork, not released JCuda behavior or upstream endorsement. Status checked 2026-11-04. Companion tests and documentation do not increase the fix count.
 
 | # | Fix | Upstream review |
 | --- | --- | --- |
@@ -19,6 +19,7 @@ Want to help with Java, CUDA, JNI, testing or build setup? Start with [CONTRIBUT
 | 6 | Remove incomplete native-library resources after failed extraction so retry can succeed | [Draft #54](https://github.com/jcuda/jcuda/pull/54) |
 | 7 | Avoid pointer-size initialization failure when the data-model property is missing; infer known architectures | [Draft #55](https://github.com/jcuda/jcuda/pull/55) |
 | 8 | **Build:** replace rejected Java 7 compiler options with an explicit Java 8 baseline | [jcuda-parent draft #2](https://github.com/jcuda/jcuda-parent/pull/2) |
+| 9 | Preserve device-pointer offsets when creating and querying driver texture resource descriptors | [Draft #56](https://github.com/jcuda/jcuda/pull/56) |
 
 See the [verified inventory](docs/CONTRIBUTION_INVENTORY.md) for before/after evidence and testing limits. At 20 distinct verified fixes: the Beautiful Java contributor report, then [original JCuda GPU art](docs/BEAUTIFUL_JAVA_ROADMAP.md). Join in with a focused, reproducible contribution; upstream review and release decisions remain with the original project.
 
