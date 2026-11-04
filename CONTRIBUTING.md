@@ -87,6 +87,7 @@ These are **draft proposals**, not merged fixes or released behavior:
 | [jcuda #62](https://github.com/jcuda/jcuda/pull/62) | Guard device-name output array bounds before native access | 6 isolated JNI-checked cases; 2 fail before, all pass after; no context creation or GPU data allocation |
 | [jcuda #63](https://github.com/jcuda/jcuda/pull/63) | Correct nested access-descriptor location reads | 3 independent cases fail before/pass after; separate #58 integration checks none/read/read-write on 2 MiB mappings, no data access |
 | [jcuda #64](https://github.com/jcuda/jcuda/pull/64) | Honor capacities in five driver graph enumeration APIs | 37 isolated JNI-checked cases; 32 fail before, all pass after; graph metadata only, no launch or data buffers |
+| [jcuda #65](https://github.com/jcuda/jcuda/pull/65) | Correct driver/runtime stream-window output conversion | 6 independent cases; 4 fail before, all pass after. Separate PR48 fixture verifies 256-byte nondefault window round-trips; no kernels |
 
 The three Java Pointer patches (#49–#51) applied together without conflicts and passed their combined 31 cases in an isolated local worktree. Those Maven runs used the disclosed task-local Java 8 parent adaptation under JDK 22. Native transfers and the complete CUDA suite were not part of those 31 tests. Each PR branch remains independent of the others.
 
