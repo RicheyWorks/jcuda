@@ -22,8 +22,13 @@ unchanged, even for a zero option count.
   a reproduced undefined-output defect. Native overwrite/read risks in the other
   missing checks were identified from source; a heap-corruption crash was not
   deliberately reproduced.
-- Rebuilt `JNvPTXCompiler` with MSVC and CUDA 12.6.85's static PTX compiler,
-  integrated common JNI sources and CUDA 12.6 headers/import libraries.
+- Toolchain correction: the initial build and baseline reproduction used the
+  installed CUDA 11.6 PTX compiler because legacy FindCUDA reset the requested
+  paths. Subsequent inspection detected this; the build was reconfigured twice
+  with explicit CUDA 12.6 roots and every relevant cache path verified. The
+  final library uses CUDA 12.6.85's static PTX compiler and 12.6 headers/import
+  libraries with integrated common JNI sources. A runtime version probe reports
+  12.6. This supersedes the initial claim that the first build used 12.6.
 - All **8 PTX regression methods passed**, in isolated child JVMs with
   `-Xcheck:jni`: negative/oversized/maximal lengths and counts, null options,
   valid prefixes, short/empty/exact/padded output arrays for all three getters,
@@ -34,6 +39,7 @@ unchanged, even for a zero option count.
   JDK 22 with JUnit 4.13.2. This was direct JUnit execution, not a Maven run.
 - After rebasing onto fork master `c28a801`, the final tree passed **121 tests**:
   all 8 PTX methods plus the expanded 113 Java-only cases, with JNI checking.
+  All 121 passed again against the corrected, verified CUDA 12.6 build.
 - JVM library logging confirmed the isolated freshly built PTX JNI DLL loaded.
 
 ## Reproduce
@@ -52,7 +58,8 @@ published native JARs do not contain these source changes.
 
 The tests compile a tiny `sm_75` PTX program on the CPU. They do not initialize a
 GPU context, allocate device memory or launch a kernel; ingestion and GPU art
-were not paused. No full GPU suite, Linux/32-bit build, other toolkit, actual
+were not paused. No full GPU suite, Linux/32-bit build, other toolkit beyond the
+11.6 and 12.6 runs above, actual
 JDK 8 runtime or allocation-failure injection was run. Callers must serialize
 compile/destroy operations against queries on the same handle; concurrent handle
 mutation between size and data calls is outside this change. No native binary
