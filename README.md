@@ -7,7 +7,7 @@ Want to help with Java, CUDA, JNI, testing or build setup? Start with [CONTRIBUT
 
 ## 🏆 Fix log
 
-**15 distinct fixes implemented and verified, proposed upstream; 0 merged.** This includes 14 runtime/API fixes (including diagnostic formatting) and 1 reproduced build fix. These are draft contributions from this fork, not released JCuda behavior or upstream endorsement. Status checked 2026-11-04. Companion tests and documentation do not increase the fix count.
+**16 distinct fixes implemented and verified, proposed upstream; 0 merged.** This includes 15 runtime/API fixes (including diagnostic formatting) and 1 reproduced build fix. These are draft contributions from this fork, not released JCuda behavior or upstream endorsement. Status checked 2026-11-04. Companion tests and documentation do not increase the fix count.
 
 | # | Fix | Upstream review |
 | --- | --- | --- |
@@ -26,6 +26,7 @@ Want to help with Java, CUDA, JNI, testing or build setup? Start with [CONTRIBUT
 | 13 | Preserve native size counts in managed-memory advice/prefetch instead of truncating them on Win64 | [Draft #60](https://github.com/jcuda/jcuda/pull/60) |
 | 14 | Preserve device name, UUID and LUID outputs when JNI uses copied array storage | [Draft #61](https://github.com/jcuda/jcuda/pull/61) |
 | 15 | Reject invalid device-name output lengths before native array access | [Draft #62](https://github.com/jcuda/jcuda/pull/62) |
+| 16 | Read virtual-memory access descriptor locations from the correct nested object | [Draft #63](https://github.com/jcuda/jcuda/pull/63) |
 
 See the [verified inventory](docs/CONTRIBUTION_INVENTORY.md) for before/after evidence and testing limits. At 20 distinct verified fixes: the Beautiful Java contributor report, then [original JCuda GPU art](docs/BEAUTIFUL_JAVA_ROADMAP.md). Join in with a focused, reproducible contribution; upstream review and release decisions remain with the original project.
 

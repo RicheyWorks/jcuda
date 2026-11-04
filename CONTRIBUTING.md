@@ -85,6 +85,7 @@ These are **draft proposals**, not merged fixes or released behavior:
 | [jcuda #60](https://github.com/jcuda/jcuda/pull/60) | Preserve managed-memory count width on Win64 | 6 JNI-checked driver/runtime advice cases; 4 fail before, all pass after; only 64 KiB allocated; prefetch not executed |
 | [jcuda #61](https://github.com/jcuda/jcuda/pull/61) | Preserve device identity byte-array outputs with copied JNI storage | 3 comparisons pass normally/fail under checking before, all pass under checking after; metadata only; Windows WDDM LUID |
 | [jcuda #62](https://github.com/jcuda/jcuda/pull/62) | Guard device-name output array bounds before native access | 6 isolated JNI-checked cases; 2 fail before, all pass after; no context creation or GPU data allocation |
+| [jcuda #63](https://github.com/jcuda/jcuda/pull/63) | Correct nested access-descriptor location reads | 3 independent cases fail before/pass after; separate #58 integration checks none/read/read-write on 2 MiB mappings, no data access |
 
 The three Java Pointer patches (#49–#51) applied together without conflicts and passed their combined 31 cases in an isolated local worktree. Those Maven runs used the disclosed task-local Java 8 parent adaptation under JDK 22. Native transfers and the complete CUDA suite were not part of those 31 tests. Each PR branch remains independent of the others.
 
