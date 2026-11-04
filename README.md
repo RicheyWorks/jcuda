@@ -7,7 +7,7 @@ Want to help with Java, CUDA, JNI, testing or build setup? Start with [CONTRIBUT
 
 ## 🏆 Fix log
 
-**19 distinct fixes implemented and verified, proposed upstream; 0 merged.** This includes 18 runtime/API fixes (including diagnostic formatting) and 1 reproduced build fix. These are draft contributions from this fork, not released JCuda behavior or upstream endorsement. Status checked 2026-11-04. Companion tests and documentation do not increase the fix count.
+**20 distinct fixes implemented and verified, proposed upstream; 0 merged.** This includes 19 runtime/API fixes (including diagnostic formatting) and 1 reproduced build fix. These are draft contributions from this fork, not released JCuda behavior or upstream endorsement. Status checked 2026-11-04. Companion tests and documentation do not increase the fix count.
 
 | # | Fix | Upstream review |
 | --- | --- | --- |
@@ -30,6 +30,7 @@ Want to help with Java, CUDA, JNI, testing or build setup? Start with [CONTRIBUT
 | 17 | Honor caller capacities and bound native output in five driver graph-list queries | [Draft #64](https://github.com/jcuda/jcuda/pull/64) |
 | 18 | Return stream access-policy windows through the correct nested object and preserve their field values | [Draft #65](https://github.com/jcuda/jcuda/pull/65) |
 | 19 | Return NVRTC lowered-name errors without reading an invalid output pointer or reporting false out-of-memory | [Draft #66](https://github.com/jcuda/jcuda/pull/66) |
+| 20 | Reject undersized NVRTC binary-output arrays before native writes | [Draft #67](https://github.com/jcuda/jcuda/pull/67) |
 
 See the [verified inventory](docs/CONTRIBUTION_INVENTORY.md) for before/after evidence and testing limits. At 20 distinct verified fixes: the Beautiful Java contributor report, then [original JCuda GPU art](docs/BEAUTIFUL_JAVA_ROADMAP.md). Join in with a focused, reproducible contribution; upstream review and release decisions remain with the original project.
 
