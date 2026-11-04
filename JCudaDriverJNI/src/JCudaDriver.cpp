@@ -10639,7 +10639,7 @@ JNIEXPORT jint JNICALL Java_jcuda_driver_JCudaDriver_cuMemPrefetchAsyncNative
     Logger::log(LOG_TRACE, "Executing cuMemPrefetchAsync\n");
 
     CUdeviceptr nativeDevPtr = (CUdeviceptr)getPointer(env, devPtr);
-    long nativeCount = (long)count;
+    size_t nativeCount = (size_t)count;
     CUdevice nativeDstDevice = (CUdevice)(intptr_t)getNativePointerValue(env, dstDevice);
     CUstream nativeHStream = (CUstream)getNativePointerValue(env, hStream);
 
@@ -10664,7 +10664,7 @@ JNIEXPORT jint JNICALL Java_jcuda_driver_JCudaDriver_cuMemAdviseNative
     Logger::log(LOG_TRACE, "Executing cuMemAdvise\n");
 
     CUdeviceptr nativeDevPtr = (CUdeviceptr)getPointer(env, devPtr);
-    long nativeCount = (long)count;
+    size_t nativeCount = (size_t)count;
     CUmem_advise nativeAdvice = (CUmem_advise)advice;
     CUdevice nativeDevice = (CUdevice)(intptr_t)getNativePointerValue(env, device);
 
