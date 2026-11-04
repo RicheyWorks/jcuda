@@ -38,5 +38,7 @@ See [the repeatable Windows build](docs/WINDOWS_BUILD.md) for matching fork Java
 
 See the [verified inventory](docs/CONTRIBUTION_INVENTORY.md) for before/after evidence and testing limits. The 20-fix report was prepared privately; the next milestone is [original JCuda GPU art](docs/BEAUTIFUL_JAVA_ROADMAP.md). Join in with a focused, reproducible contribution; upstream review and release decisions remain with the original project.
 
+Further fork work is recorded in the [development log](docs/DEVELOPMENT_LOG.md), including the primary-context test leak fix and its ownership regressions.
+
 Refer to [jcuda-main](https://github.com/jcuda/jcuda-main) for further
 information and build instructions.

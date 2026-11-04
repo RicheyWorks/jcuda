@@ -12,13 +12,9 @@ Draft [PR #53](https://github.com/jcuda/jcuda/pull/53) adds actual driver-transf
 
 **Acceptance:** Verify the stored byte offset equals `(arrayOffset + position) * elementSize`, and that position, limit and mark remain intact. A test subclass can expose protected `Pointer.getByteOffset()` via the protected copy constructor; avoid production accessors added only for testing. State that these tests verify Java pointer construction, not native memory transfer. Run the focused test under the declared JUnit 4 dependency.
 
-## 2. Release the retained primary context in its existing test
+## 2. Primary-context test cleanup — completed in this fork
 
-**Area:** GPU test cleanup. **Hardware:** CUDA-capable NVIDIA device/driver.
-
-`JCudaDriverPrimaryContextTest.testPrimaryContextCreation` calls `cuDevicePrimaryCtxRetain` but does not release that retained reference. Add matching cleanup in a `finally` block after a successful retain, preserving the test's existing assertions. Review the CUDA primary-context reference-count contract first.
-
-**Acceptance:** The test releases exactly the reference it acquired even when an assertion fails, and does not reset a shared primary context or destroy resources it does not own. Run the focused test when the GPU is available, report device/driver/native library versions, and explain any unavailable verification. Do not use device reset as cleanup.
+The retained reference is now released in finally. Two isolated ownership regressions fail before/pass after; five focused context checks pass together. See the [development log](DEVELOPMENT_LOG.md). This is no longer an unassigned starter proposal.
 
 ## 3. Add a CPU-only CI check for the integrated fork
 

@@ -7,6 +7,7 @@ package jcuda.test;
 
 import static jcuda.driver.JCudaDriver.cuDeviceGet;
 import static jcuda.driver.JCudaDriver.cuDevicePrimaryCtxRetain;
+import static jcuda.driver.JCudaDriver.cuDevicePrimaryCtxRelease;
 import static jcuda.driver.JCudaDriver.cuInit;
 import static org.junit.Assert.assertFalse;
 
@@ -31,8 +32,15 @@ public class JCudaDriverPrimaryContextTest
         CUcontext context = new CUcontext();
         cuDevicePrimaryCtxRetain(context, device);
         
-        CUcontext nullContext = new CUcontext();
-        assertFalse(context.equals(nullContext));
+        try
+        {
+            CUcontext nullContext = new CUcontext();
+            assertFalse(context.equals(nullContext));
+        }
+        finally
+        {
+            cuDevicePrimaryCtxRelease(device);
+        }
     }
         
 }
