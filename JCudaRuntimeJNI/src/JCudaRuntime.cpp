@@ -30,6 +30,7 @@
 #include "PointerUtils.hpp"
 
 #include <cstring>
+#include <new>
 
 jfieldID cudaDeviceProp_name; // byte[256]
 jfieldID cudaDeviceProp_uuid; // jcuda.runtime.cudaUUID
@@ -1888,19 +1889,38 @@ JNIEXPORT jint JNICALL Java_jcuda_runtime_JCuda_cudaDeviceGetPCIBusIdNative
         ThrowByName(env, "java/lang/NullPointerException", "Parameter 'pciBusId' is null for cudaDeviceGetPCIBusId");
         return JCUDA_INTERNAL_ERROR;
     }
+    if (env->GetArrayLength(pciBusId) == 0 || len <= 0)
+    {
+        ThrowByName(env, "java/lang/IllegalArgumentException",
+            "pciBusId must have at least one element and len must be positive");
+        return JCUDA_INTERNAL_ERROR;
+    }
     Logger::log(LOG_TRACE, "Executing cudaDeviceGetPCIBusId\n");
 
-    char *nativePciBusId = new char[(int)len];
+    // Reserve a guard terminator without overflowing the signed Java length.
+    char *nativePciBusId = new (std::nothrow) char[(size_t)len + 1];
+    if (nativePciBusId == NULL)
+    {
+        ThrowByName(env, "java/lang/OutOfMemoryError", "Out of memory querying PCI bus ID");
+        return JCUDA_INTERNAL_ERROR;
+    }
+    nativePciBusId[len] = '\0';
     int result = cudaDeviceGetPCIBusId(nativePciBusId, (int)len, (int)device);
 
+    if (result != cudaSuccess)
+    {
+        delete[] nativePciBusId;
+        return result;
+    }
+
     jstring pciBusIdElement = env->NewStringUTF(nativePciBusId);
+    delete[] nativePciBusId;
     if (pciBusIdElement == NULL)
     {
-       ThrowByName(env, "java/lang/OutOfMemoryError", "Out of memory creating result string");
        return JCUDA_INTERNAL_ERROR;
     }
-    delete[] nativePciBusId;
     env->SetObjectArrayElement(pciBusId, 0, pciBusIdElement);
+    env->DeleteLocalRef(pciBusIdElement);
     if (env->ExceptionCheck())
     {
         return JCUDA_INTERNAL_ERROR;
