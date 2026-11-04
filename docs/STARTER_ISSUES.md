@@ -8,6 +8,8 @@ These are scoped proposals for discussion in the contributor fork. They have **n
 
 The existing `TestPointerToBuffer` uses CUDA host-to-host copies and concentrates on float buffers. Add a separate, parameterized no-CUDA test for array-backed byte, short, int, long, float and double buffers, including nested slices and nonzero positions. Character buffers are being added in draft PR #51, so coordinate before adding that type.
 
+Draft [PR #53](https://github.com/jcuda/jcuda/pull/53) adds actual driver-transfer coverage, but needs CUDA hardware. This proposal is specifically the CPU-only construction layer for contributors and CI without a GPU.
+
 **Acceptance:** Verify the stored byte offset equals `(arrayOffset + position) * elementSize`, and that position, limit and mark remain intact. A test subclass can expose protected `Pointer.getByteOffset()` via the protected copy constructor; avoid production accessors added only for testing. State that these tests verify Java pointer construction, not native memory transfer. Run the focused test under the declared JUnit 4 dependency.
 
 ## 2. Release the retained primary context in its existing test

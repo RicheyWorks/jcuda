@@ -4,6 +4,8 @@ This is **RicheyWorks' contributor fork** of [JCuda](https://github.com/jcuda/jc
 
 Java, CUDA and JNI developers are welcome. A useful contribution can be a reproducible bug, a focused regression test, a small binding fix, or a verified build improvement. Review the [starter proposals](docs/STARTER_ISSUES.md) before claiming work; they are proposals, not assigned or already published upstream issues.
 
+Follow the [verified contribution inventory](docs/CONTRIBUTION_INVENTORY.md) for fix counts, PR states and test limits, and the [Beautiful Java milestones](docs/BEAUTIFUL_JAVA_ROADMAP.md) for the 20-fix report and later GPU-art plan.
+
 ## Before changing code
 
 1. Search [upstream issues](https://github.com/jcuda/jcuda/issues) and [open pull requests](https://github.com/jcuda/jcuda/pulls), including discussion comments. A complete proposed fix may exist in a comment even without a PR.
@@ -63,6 +65,7 @@ These are **draft proposals**, not merged fixes or released behavior:
 | [#50](https://github.com/jcuda/jcuda/pull/50) | Honor stored pointer offsets in `getByteBuffer` views | 12 focused no-CUDA regression cases |
 | [#51](https://github.com/jcuda/jcuda/pull/51) | Accept `CharBuffer` in `Pointer.toBuffer` | 6 focused no-CUDA regression cases |
 | [#52](https://github.com/jcuda/jcuda/pull/52) | Allow `cuCtxSetCurrent(null)` per the CUDA contract | 2 driver-context tests against a freshly built JNI DLL, with JNI checking |
+| [jcuda-common #4](https://github.com/jcuda/jcuda-common/pull/4) | Preserve requested critical-array copy-back mode | Companion [jcuda #53](https://github.com/jcuda/jcuda/pull/53): 12 tiny native-transfer cases pass under JNI checking after the shared fix |
 
 The three Java Pointer patches (#49–#51) applied together without conflicts and passed their combined 31 cases in an isolated local worktree. Those Maven runs used the disclosed task-local Java 8 parent adaptation under JDK 22. Native transfers and the complete CUDA suite were not part of those 31 tests. Each PR branch remains independent of the others.
 
