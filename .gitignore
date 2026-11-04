@@ -5,6 +5,7 @@
 /target
 /nativeLibraries
 /out/
+__pycache__/
 /.project
 /.settings
 /JCudaJava/src/test/resources/kernels/*.ptx

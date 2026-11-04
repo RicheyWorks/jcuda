@@ -42,5 +42,7 @@ See the [verified inventory](docs/CONTRIBUTION_INVENTORY.md) for before/after ev
 
 Further fork work is recorded in the [development log](docs/DEVELOPMENT_LOG.md), including the primary-context test leak fix and its ownership regressions.
 
+The fork also has [weekly contributor inspection and explicit CPU verification](docs/CONTRIBUTOR_AUTOMATION.md), with read-only reports and no automatic PR execution or merging.
+
 Refer to [jcuda-main](https://github.com/jcuda/jcuda-main) for further
 information and build instructions.

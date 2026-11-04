@@ -1,0 +1,68 @@
+name: Weekly contributor review
+on:
+  schedule:
+    - cron: '17 6 * * 1' # Monday06:17 UTC; scheduling can be delayed by GitHub.
+  workflow_dispatch:
+permissions: {}
+jobs:
+  triage:
+    if: github.repository == 'RicheyWorks/jcuda' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions:
+      contents: read
+      pull-requests: read
+      checks: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - name: Test the trusted review tools
+        run: python3 -m unittest discover -s tools/review -p 'test_*.py' -v
+      - name: Collect metadata and security signals (never PR execution)
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: python3 tools/review/weekly_review.py --out review-output
+      - name: Preserve review audit
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: contributor-review-${{ github.run_id }}
+          path: review-output/
+          if-no-files-found: warn
+          retention-days: 90
+  trusted-base-tests:
+    if: github.repository == 'RicheyWorks/jcuda' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions: {}
+    steps:
+      - name: Use preinstalled JDK21 (no credentials or cache)
+        run: |
+          test -x "$JAVA_HOME_21_X64/bin/javac"
+          echo "$JAVA_HOME_21_X64/bin" >> "$GITHUB_PATH"
+          echo "JAVA_HOME=$JAVA_HOME_21_X64" >> "$GITHUB_ENV"
+      - name: Fetch immutable trusted verifier, then test the trusted base
+        env:
+          TRUSTED_SHA: ${{ github.sha }}
+        run: |
+          python3 - <<'PY'
+          import os,re,urllib.request
+          sha=os.environ['TRUSTED_SHA']
+          assert re.fullmatch('[0-9a-f]{40}',sha)
+          url='https://raw.githubusercontent.com/RicheyWorks/jcuda/'+sha+'/tools/review/verify_cpu.py'
+          with urllib.request.urlopen(url,timeout=30) as response:
+              open('verifier.py','wb').write(response.read())
+          PY
+          python3 verifier.py --candidate-sha "$TRUSTED_SHA" --trusted-sha "$TRUSTED_SHA" --out verification-output
+      - name: Preserve baseline verification diagnostics
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: trusted-base-cpu-${{ github.run_id }}
+          path: |
+            verification-output/verification.json
+            verification-output/*.log
+          if-no-files-found: warn
+          retention-days: 90

@@ -1,0 +1,87 @@
+name: Manually verify pinned candidate
+run-name: Verify PR ${{ inputs.pr_number }} at ${{ inputs.expected_head_sha || github.sha }}
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'Explicit PR number;0 checks trusted master only'
+        type: string
+        required: true
+        default: '0'
+      expected_head_sha:
+        description: 'Exact40-character reviewed PR head SHA (required when PR>0)'
+        type: string
+        required: false
+permissions: {}
+jobs:
+  resolve:
+    if: github.repository == 'RicheyWorks/jcuda' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    permissions: {}
+    outputs:
+      candidate_sha: ${{ steps.pin.outputs.candidate_sha }}
+      trusted_sha: ${{ steps.pin.outputs.trusted_sha }}
+    steps:
+      - name: Fetch trusted resolver at workflow SHA (public read only)
+        env:
+          TRUSTED_SHA: ${{ github.sha }}
+        run: |
+          python3 - <<'PY'
+          import os,re,urllib.request
+          sha=os.environ['TRUSTED_SHA']
+          assert re.fullmatch('[0-9a-f]{40}',sha)
+          url='https://raw.githubusercontent.com/RicheyWorks/jcuda/'+sha+'/tools/review/resolve_candidate.py'
+          with urllib.request.urlopen(url,timeout=30) as response:
+              open('resolver.py','wb').write(response.read())
+          PY
+      - name: Validate request and pin the candidate
+        id: pin
+        env:
+          PR_NUMBER: ${{ inputs.pr_number }}
+          EXPECTED_SHA: ${{ inputs.expected_head_sha }}
+          TRUSTED_SHA: ${{ github.sha }}
+        run: python3 resolver.py
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: candidate-resolution-${{ github.run_id }}
+          path: resolution.json
+          retention-days: 90
+  isolated-cpu:
+    needs: resolve
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions: {}
+    steps:
+      - name: Use preinstalled JDK21
+        run: |
+          test -x "$JAVA_HOME_21_X64/bin/javac"
+          echo "$JAVA_HOME_21_X64/bin" >> "$GITHUB_PATH"
+          echo "JAVA_HOME=$JAVA_HOME_21_X64" >> "$GITHUB_ENV"
+      - name: Fetch trusted verifier (no PR workflows or scripts)
+        env:
+          TRUSTED_SHA: ${{ needs.resolve.outputs.trusted_sha }}
+        run: |
+          python3 - <<'PY'
+          import os,re,urllib.request
+          sha=os.environ['TRUSTED_SHA']
+          assert re.fullmatch('[0-9a-f]{40}',sha)
+          url='https://raw.githubusercontent.com/RicheyWorks/jcuda/'+sha+'/tools/review/verify_cpu.py'
+          with urllib.request.urlopen(url,timeout=30) as response:
+              open('verifier.py','wb').write(response.read())
+          PY
+      - name: Run only the trusted CPU harness against pinned Java sources
+        env:
+          CANDIDATE_SHA: ${{ needs.resolve.outputs.candidate_sha }}
+          TRUSTED_SHA: ${{ needs.resolve.outputs.trusted_sha }}
+        run: python3 verifier.py --candidate-sha "$CANDIDATE_SHA" --trusted-sha "$TRUSTED_SHA" --out verification-output
+      - name: Preserve untrusted diagnostics; never consume them as code
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: candidate-cpu-${{ github.run_id }}
+          path: |
+            verification-output/verification.json
+            verification-output/*.log
+          if-no-files-found: warn
+          retention-days: 90
