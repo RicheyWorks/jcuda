@@ -2,7 +2,7 @@
 
 Snapshot verified **2026-11-04**. This is a running record of proposals from this contributor fork, not a claim that upstream has accepted them. Refresh PR status before sharing a report.
 
-**Milestone count: 6 distinct implemented and verified proposed fixes out of 20. Upstream merged fixes: 0.** All six remain draft proposals. The missing `CharBuffer` path is counted once as an API omission fix; the two `getByteBuffer` overloads are one fix, and the shared-JNI fix plus its companion test PR are one fix.
+**Milestone count: 7 distinct implemented and verified proposed fixes out of 20. Upstream merged fixes: 0.** All seven remain draft proposals. The missing `CharBuffer` path is counted once as an API omission fix; the two `getByteBuffer` overloads are one fix, and the shared-JNI fix plus its companion test PR are one fix.
 
 ## Counted fixes
 
@@ -14,6 +14,7 @@ Snapshot verified **2026-11-04**. This is a running record of proposals from thi
 | 4 | `cuCtxSetCurrent(null)` throws instead of following CUDA's null-context contract | [jcuda #52](https://github.com/jcuda/jcuda/pull/52) | 2 driver-context cases fail before and pass against rebuilt JNI with `-Xcheck:jni`; private CPU threads and cleaned-up temporary context, no kernels/transfers |
 | 5 | Shared JNI forces `JNI_ABORT` for an otherwise pinned array, discarding native output under HotSpot's JNI checker | [jcuda-common #4](https://github.com/jcuda/jcuda-common/pull/4) | Companion [jcuda #53](https://github.com/jcuda/jcuda/pull/53): 12 heap/direct numeric transfer cases pass normally but fail with zero output under `-Xcheck:jni`; all pass under checking after rebuilding with the common fix |
 | 6 | Failed native-resource extraction leaves a partial file that blocks a fresh extraction on retry | [jcuda #54](https://github.com/jcuda/jcuda/pull/54) | 3 no-CUDA cases: injected read failure/retry, preservation of existing files, and missing-resource handling; 1 case fails before, all pass after. Cleanup is best-effort; existing corrupt files and cross-process extraction races are not repaired |
+| 7 | `Sizeof.POINTER` crashes when `sun.arch.data.model` is missing, or guesses 32 bits for an unrecognized model on a known 64-bit architecture | [jcuda #55](https://github.com/jcuda/jcuda/pull/55) | 14 isolated-JVM property cases: 11 fail before, all pass after; explicit model values retain precedence. These simulate properties, not actual architecture/ABI certification; unknown architectures retain the legacy warning and 32-bit fallback |
 
 All are independent branches from their respective upstream master. Fixes #1–#3 also applied together without conflicts and passed their combined 31 no-CUDA cases in an isolated worktree. Other tests were validated on their respective native builds; do not describe the separate results as one complete CUDA-suite run.
 

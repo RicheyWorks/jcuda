@@ -67,6 +67,7 @@ These are **draft proposals**, not merged fixes or released behavior:
 | [#52](https://github.com/jcuda/jcuda/pull/52) | Allow `cuCtxSetCurrent(null)` per the CUDA contract | 2 driver-context tests against a freshly built JNI DLL, with JNI checking |
 | [jcuda-common #4](https://github.com/jcuda/jcuda-common/pull/4) | Preserve requested critical-array copy-back mode | Companion [jcuda #53](https://github.com/jcuda/jcuda/pull/53): 12 tiny native-transfer cases pass under JNI checking after the shared fix |
 | [#54](https://github.com/jcuda/jcuda/pull/54) | Clean up incomplete library-resource extraction so retries can succeed | 3 no-CUDA cases, including an injected mid-read failure followed by successful retry |
+| [#55](https://github.com/jcuda/jcuda/pull/55) | Fall back to known architecture when the pointer-size model property is unavailable | 14 no-CUDA cases in isolated JVMs; simulated properties, not hardware certification |
 
 The three Java Pointer patches (#49–#51) applied together without conflicts and passed their combined 31 cases in an isolated local worktree. Those Maven runs used the disclosed task-local Java 8 parent adaptation under JDK 22. Native transfers and the complete CUDA suite were not part of those 31 tests. Each PR branch remains independent of the others.
 
