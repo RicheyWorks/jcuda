@@ -26,4 +26,6 @@ Draft [PR #53](https://github.com/jcuda/jcuda/pull/53) adds actual driver-transf
 
 Propose a minimal CI job that compiles the Java module and runs only explicitly identified no-CUDA tests. The three draft Pointer test classes in #49–#51 are candidate inputs; they are not yet in upstream `master`. The parent POM and Java compiler baseline need deliberate handling rather than an undocumented cache substitution.
 
+The proposed [parent build fix #2](https://github.com/jcuda/jcuda-parent/pull/2) now gives a reviewable Java 8 baseline tested with JDK 21/22. It is still unmerged; evaluate that proposal explicitly rather than treating it as upstream's current policy.
+
 **Acceptance:** Pin the build environment, resolve/install the actual parent, print tool versions, select only tests that do not load CUDA, and publish clear test results. A clean runner must reproduce the job. Do not silently skip native tests and describe the result as full CUDA coverage, or change the upstream compiler target incidentally. Discuss an upstream CI proposal before expanding it across all repositories.

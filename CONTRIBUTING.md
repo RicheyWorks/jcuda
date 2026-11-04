@@ -32,6 +32,15 @@ For the complete set of libraries and native packaging, clone the additional rep
 
 Upstream currently declares version **12.6.0**. Its parent POM configures Java 7 source/target, while some source uses Java 8 APIs. JDK 8 is the expected baseline for that configuration, but we have not verified this checkout on a JDK 8 host. A newer JDK may reject the compiler target; our JDK 22 build did. Changing the parent locally to Java 8 allowed our focused validation, but that was an isolated verification adaptation, not an upstream build fix or supported-version claim.
 
+There is now a separate proposed parent build fix, [jcuda-parent #2](https://github.com/jcuda/jcuda-parent/pull/2), targeting Java 8. Fresh core compilation passed on JDK 21 and 22, and the 48 Java-only regression cases passed on JDK 21 with that parent installed normally. Rebuilt artifacts require Java 8 or newer; no JDK 8 runtime or full packaging/reactor certification is implied.
+
+To opt into that **unmerged proposal** from the fresh sibling layout above, fetch its source branch before installing the parent:
+
+```powershell
+git -C ../jcuda-parent fetch https://github.com/RicheyWorks/jcuda-parent.git fix/java8-compiler-baseline
+git -C ../jcuda-parent switch -c try-java8-parent FETCH_HEAD
+```
+
 With the chosen JDK and Maven available, install the parent before building this Java module:
 
 ```powershell
@@ -68,6 +77,7 @@ These are **draft proposals**, not merged fixes or released behavior:
 | [jcuda-common #4](https://github.com/jcuda/jcuda-common/pull/4) | Preserve requested critical-array copy-back mode | Companion [jcuda #53](https://github.com/jcuda/jcuda/pull/53): 12 tiny native-transfer cases pass under JNI checking after the shared fix |
 | [#54](https://github.com/jcuda/jcuda/pull/54) | Clean up incomplete library-resource extraction so retries can succeed | 3 no-CUDA cases, including an injected mid-read failure followed by successful retry |
 | [#55](https://github.com/jcuda/jcuda/pull/55) | Fall back to known architecture when the pointer-size model property is unavailable | 14 no-CUDA cases in isolated JVMs; simulated properties, not hardware certification |
+| [jcuda-parent #2](https://github.com/jcuda/jcuda-parent/pull/2) | Fix rejected Java 7 compiler settings with an explicit Java 8 baseline | Fresh core compilation on JDK 21/22; 48 Java-only cases on JDK 21; rebuilt classfiles require Java 8 |
 
 The three Java Pointer patches (#49–#51) applied together without conflicts and passed their combined 31 cases in an isolated local worktree. Those Maven runs used the disclosed task-local Java 8 parent adaptation under JDK 22. Native transfers and the complete CUDA suite were not part of those 31 tests. Each PR branch remains independent of the others.
 

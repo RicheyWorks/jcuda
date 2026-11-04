@@ -2,7 +2,7 @@
 
 Snapshot verified **2026-11-04**. This is a running record of proposals from this contributor fork, not a claim that upstream has accepted them. Refresh PR status before sharing a report.
 
-**Milestone count: 7 distinct implemented and verified proposed fixes out of 20. Upstream merged fixes: 0.** All seven remain draft proposals. The missing `CharBuffer` path is counted once as an API omission fix; the two `getByteBuffer` overloads are one fix, and the shared-JNI fix plus its companion test PR are one fix.
+**Milestone count: 8 distinct implemented and verified proposed fixes out of 20: 7 runtime/API fixes and 1 build fix. Upstream merged fixes: 0.** All eight remain draft proposals. The missing `CharBuffer` path is counted once as an API omission fix; the two `getByteBuffer` overloads are one fix, and the shared-JNI fix plus its companion test PR are one fix.
 
 ## Counted fixes
 
@@ -15,10 +15,11 @@ Snapshot verified **2026-11-04**. This is a running record of proposals from thi
 | 5 | Shared JNI forces `JNI_ABORT` for an otherwise pinned array, discarding native output under HotSpot's JNI checker | [jcuda-common #4](https://github.com/jcuda/jcuda-common/pull/4) | Companion [jcuda #53](https://github.com/jcuda/jcuda/pull/53): 12 heap/direct numeric transfer cases pass normally but fail with zero output under `-Xcheck:jni`; all pass under checking after rebuilding with the common fix |
 | 6 | Failed native-resource extraction leaves a partial file that blocks a fresh extraction on retry | [jcuda #54](https://github.com/jcuda/jcuda/pull/54) | 3 no-CUDA cases: injected read failure/retry, preservation of existing files, and missing-resource handling; 1 case fails before, all pass after. Cleanup is best-effort; existing corrupt files and cross-process extraction races are not repaired |
 | 7 | `Sizeof.POINTER` crashes when `sun.arch.data.model` is missing, or guesses 32 bits for an unrecognized model on a known 64-bit architecture | [jcuda #55](https://github.com/jcuda/jcuda/pull/55) | 14 isolated-JVM property cases: 11 fail before, all pass after; explicit model values retain precedence. These simulate properties, not actual architecture/ABI certification; unknown architectures retain the legacy warning and 32-bit fallback |
+| 8 | **Build:** parent compiler settings target Java 7, rejected by newer JDKs despite core use of Java 8 APIs | [jcuda-parent #2](https://github.com/jcuda/jcuda-parent/pull/2) | Fresh unchanged core worktree fails on JDK 22 before; all 222 main and 12 test sources compile on JDK 21 and 22 after normal parent installation. Classfile major version 52 confirmed. All 48 Java-only cases pass on JDK 21 with the proposed parent. Rebuilt artifacts now require Java 8; full reactor, packaging/Javadocs and a JDK 8 host remain unverified |
 
 All are independent branches from their respective upstream master. Fixes #1–#3 also applied together without conflicts and passed their combined 31 no-CUDA cases in an isolated worktree. Other tests were validated on their respective native builds; do not describe the separate results as one complete CUDA-suite run.
 
-Java validation used declared JUnit 4.13.1, Temurin JDK 22, and an isolated local parent adjusted to Java 8 source/target because upstream's Java 7 compiler target was rejected. That build adaptation is disclosed in the PRs and is not part of their source changes.
+Historical Java validation for fixes #1–#7 used declared JUnit 4.13.1, Temurin JDK 22, and an isolated local parent adjusted to Java 8 source/target because upstream's Java 7 compiler target was rejected. That adaptation is disclosed in those PRs and is not part of their source changes. Fix #8 captures the compiler-baseline change as a separate reviewable parent patch: its installed POM hash matches the source exactly, without a manually altered cache entry. The new 48-case JDK 21 run uses that proposed parent.
 
 Native checks used Windows x86_64, RTX 4090, driver 617.42, existing MSVC 19.44/CMake, and checksum-verified official CUDA 12.6 headers/import libraries extracted into the workspace. JVM library logging confirmed the rebuilt DLL. These checks do not establish full-toolkit, Linux, JDK 8 or cross-library compatibility. GPU transfers used at most 24 device bytes per case; no kernels, resets or ingestion pauses were needed.
 
@@ -30,7 +31,7 @@ Native checks used Windows x86_64, RTX 4090, driver 617.42, existing MSVC 19.44/
 
 ## Counting and reporting rules
 
-Count a distinct production bug or missing supported behavior only after implementing it and verifying it proportionately. Keep the reproduction, source changes and test evidence reviewable. Do not split overloads, multiple parameterized cases, companion repositories, or follow-up polish into extra fixes for the same root cause. Track documentation, tests, tooling and unimplemented ideas separately.
+Count a distinct runtime/API bug, missing supported behavior, or reproduced build failure only after implementing it and verifying it proportionately. Label build fixes and their compatibility impact explicitly. Keep the reproduction, source changes and test evidence reviewable. Do not split overloads, multiple parameterized cases, companion repositories, or follow-up polish into extra fixes for the same root cause. Track documentation, companion tests, tooling additions and unimplemented ideas separately; they do not become fixes merely by creating a PR.
 
 At **20** counted fixes, prepare the Beautiful Java report with one row per distinct fix, linked commits/PRs, before/after behavior, test evidence, compatibility limits and current status. Separate local work, submitted drafts, accepted/merged changes and released behavior. Include reproducible entry points for new contributors and remaining gaps. Do not wait for a convenient headline or claim that 20 proposals means 20 upstream merges.
 
