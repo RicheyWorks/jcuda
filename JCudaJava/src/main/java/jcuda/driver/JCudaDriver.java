@@ -3716,8 +3716,9 @@ public class JCudaDriver
      *   </p>
      * </div>
      *
-     * @param pciBusId Returned identifier string for the device in the following format [domain]:[bus]:[device].[function] where domain, bus, device, and function are all hexadecimal values. pciBusId should be large enough to store 13 characters including the NULL-terminator.
-     * @param len Maximum length of string to store in name
+     * @param pciBusId array with at least one element; receives the PCI identifier in element zero. The array is unchanged on CUDA errors.
+     * @throws IllegalArgumentException if pciBusId is empty or len is not positive
+     * @param len positive native buffer size in bytes, including the NULL terminator (13 holds a complete PCI identifier)
      * @param dev Device to get identifier string for
      *
      * @return CUDA_SUCCESS, CUDA_ERROR_DEINITIALIZED, CUDA_ERROR_NOT_INITIALIZED,
