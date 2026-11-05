@@ -71,6 +71,17 @@ JNIEXPORT void JNICALL Java_jcuda_nvptxcompiler_JNvPTXCompiler_setLogLevel
 }
 
 
+// Validate Java capacities before allocating or invoking the native API.
+static bool checkCapacity(JNIEnv* env, jarray array, size_t required, const char* message)
+{
+    if ((size_t)env->GetArrayLength(array) < required)
+    {
+        ThrowByName(env, "java/lang/IllegalArgumentException", message);
+        return false;
+    }
+    return true;
+}
+
 //=========================================================================
 // Auto-generated part:
 
@@ -106,6 +117,9 @@ JNIEXPORT jint JNICALL Java_jcuda_nvptxcompiler_JNvPTXCompiler_nvPTXCompilerGetV
         return JCUDA_INTERNAL_ERROR;
     }
 
+    if (!checkCapacity(env, major, 1, "Parameter 'major' must have at least one element")) return JCUDA_INTERNAL_ERROR;
+    if (!checkCapacity(env, minor, 1, "Parameter 'minor' must have at least one element")) return JCUDA_INTERNAL_ERROR;
+
     // Log message
     Logger::log(LOG_TRACE, "Executing nvPTXCompilerGetVersion(major=%p, minor=%p)\n",
         major, minor);
@@ -120,6 +134,9 @@ JNIEXPORT jint JNICALL Java_jcuda_nvptxcompiler_JNvPTXCompiler_nvPTXCompilerGetV
 
     // Native function call
     nvPTXCompileResult jniResult_native = nvPTXCompilerGetVersion(&major_native, &minor_native);
+
+    // CUDA does not define output values on failure.
+    if (jniResult_native != NVPTXCOMPILE_SUCCESS) return (jint)jniResult_native;
 
     // Write back native variable values
     if (!set(env, major, 0, (jint)major_native)) return JCUDA_INTERNAL_ERROR;
@@ -170,12 +187,18 @@ JNIEXPORT jint JNICALL Java_jcuda_nvptxcompiler_JNvPTXCompiler_nvPTXCompilerCrea
         return JCUDA_INTERNAL_ERROR;
     }
 
+    if (ptxCodeLen < 0 || ptxCodeLen > (jlong)env->GetArrayLength(ptxCode))
+    {
+        ThrowByName(env, "java/lang/IllegalArgumentException", "ptxCodeLen must be between zero and ptxCode.length");
+        return JCUDA_INTERNAL_ERROR;
+    }
+
     // Log message
     Logger::log(LOG_TRACE, "Executing nvPTXCompilerCreate(compiler=%p, ptxCodeLen=%ld, ptxCode=%p)\n",
         compiler, ptxCodeLen, ptxCode);
 
     // Native variable declarations
-    nvPTXCompilerHandle compiler_native;
+    nvPTXCompilerHandle compiler_native = NULL;
     size_t ptxCodeLen_native;
     char* ptxCode_native = NULL;
 
@@ -188,7 +211,10 @@ JNIEXPORT jint JNICALL Java_jcuda_nvptxcompiler_JNvPTXCompiler_nvPTXCompilerCrea
     nvPTXCompileResult jniResult_native = nvPTXCompilerCreate(&compiler_native, ptxCodeLen_native, ptxCode_native);
 
     // Write back native variable values
-    setNativePointerValue(env, compiler, (jlong)compiler_native);
+    if (jniResult_native == NVPTXCOMPILE_SUCCESS)
+    {
+        setNativePointerValue(env, compiler, (jlong)compiler_native);
+    }
     // ptxCodeLen is primitive
     if (!releaseNative(env, ptxCode_native, ptxCode, true)) return JCUDA_INTERNAL_ERROR;
 
@@ -282,6 +308,24 @@ JNIEXPORT jint JNICALL Java_jcuda_nvptxcompiler_JNvPTXCompiler_nvPTXCompilerComp
         return JCUDA_INTERNAL_ERROR;
     }
 
+    if (numCompileOptions < 0 || numCompileOptions > env->GetArrayLength(compileOptions))
+    {
+        ThrowByName(env, "java/lang/IllegalArgumentException", "numCompileOptions must be between zero and compileOptions.length");
+        return JCUDA_INTERNAL_ERROR;
+    }
+    // Only the requested prefix is passed to CUDA. Null trailing entries are legal.
+    for (jint i = 0; i < numCompileOptions; i++)
+    {
+        jobject option = env->GetObjectArrayElement(compileOptions, i);
+        if (env->ExceptionCheck()) return JCUDA_INTERNAL_ERROR;
+        if (option == NULL)
+        {
+            ThrowByName(env, "java/lang/NullPointerException", "A requested compileOptions entry is null");
+            return JCUDA_INTERNAL_ERROR;
+        }
+        env->DeleteLocalRef(option);
+    }
+
     // Log message
     Logger::log(LOG_TRACE, "Executing nvPTXCompilerCompile(compiler=%p, numCompileOptions=%d, compileOptions=%p)\n",
         compiler, numCompileOptions, compileOptions);
@@ -341,6 +385,8 @@ JNIEXPORT jint JNICALL Java_jcuda_nvptxcompiler_JNvPTXCompiler_nvPTXCompilerGetC
         return JCUDA_INTERNAL_ERROR;
     }
 
+    if (!checkCapacity(env, binaryImageSize, 1, "Parameter 'binaryImageSize' must have at least one element")) return JCUDA_INTERNAL_ERROR;
+
     // Log message
     Logger::log(LOG_TRACE, "Executing nvPTXCompilerGetCompiledProgramSize(compiler=%p, binaryImageSize=%p)\n",
         compiler, binaryImageSize);
@@ -355,6 +401,9 @@ JNIEXPORT jint JNICALL Java_jcuda_nvptxcompiler_JNvPTXCompiler_nvPTXCompilerGetC
 
     // Native function call
     nvPTXCompileResult jniResult_native = nvPTXCompilerGetCompiledProgramSize(compiler_native, &binaryImageSize_native);
+
+    // CUDA does not define output values on failure.
+    if (jniResult_native != NVPTXCOMPILE_SUCCESS) return (jint)jniResult_native;
 
     // Write back native variable values
     // compiler is read-only
@@ -409,6 +458,10 @@ JNIEXPORT jint JNICALL Java_jcuda_nvptxcompiler_JNvPTXCompiler_nvPTXCompilerGetC
 
     // Obtain native variable values
     compiler_native = (nvPTXCompilerHandle)getNativePointerValue(env, compiler);
+    size_t required = 0;
+    nvPTXCompileResult sizeResult = nvPTXCompilerGetCompiledProgramSize(compiler_native, &required);
+    if (sizeResult != NVPTXCOMPILE_SUCCESS) return (jint)sizeResult;
+    if (!checkCapacity(env, binaryImage, required, "Parameter 'binaryImage' is smaller than the required output size")) return JCUDA_INTERNAL_ERROR;
     if (!initNative(env, binaryImage, binaryImage_native, true)) return JCUDA_INTERNAL_ERROR;
 
     // Native function call
@@ -453,6 +506,8 @@ JNIEXPORT jint JNICALL Java_jcuda_nvptxcompiler_JNvPTXCompiler_nvPTXCompilerGetE
         return JCUDA_INTERNAL_ERROR;
     }
 
+    if (!checkCapacity(env, errorLogSize, 1, "Parameter 'errorLogSize' must have at least one element")) return JCUDA_INTERNAL_ERROR;
+
     // Log message
     Logger::log(LOG_TRACE, "Executing nvPTXCompilerGetErrorLogSize(compiler=%p, errorLogSize=%p)\n",
         compiler, errorLogSize);
@@ -467,6 +522,9 @@ JNIEXPORT jint JNICALL Java_jcuda_nvptxcompiler_JNvPTXCompiler_nvPTXCompilerGetE
 
     // Native function call
     nvPTXCompileResult jniResult_native = nvPTXCompilerGetErrorLogSize(compiler_native, &errorLogSize_native);
+
+    // CUDA does not define output values on failure.
+    if (jniResult_native != NVPTXCOMPILE_SUCCESS) return (jint)jniResult_native;
 
     // Write back native variable values
     // compiler is read-only
@@ -517,6 +575,10 @@ JNIEXPORT jint JNICALL Java_jcuda_nvptxcompiler_JNvPTXCompiler_nvPTXCompilerGetE
 
     // Obtain native variable values
     compiler_native = (nvPTXCompilerHandle)getNativePointerValue(env, compiler);
+    size_t required = 0;
+    nvPTXCompileResult sizeResult = nvPTXCompilerGetErrorLogSize(compiler_native, &required);
+    if (sizeResult != NVPTXCOMPILE_SUCCESS) return (jint)sizeResult;
+    if (!checkCapacity(env, errorLog, required, "Parameter 'errorLog' is smaller than the required output size")) return JCUDA_INTERNAL_ERROR;
     if (!initNative(env, errorLog, errorLog_native, true)) return JCUDA_INTERNAL_ERROR;
 
     // Native function call
@@ -561,6 +623,8 @@ JNIEXPORT jint JNICALL Java_jcuda_nvptxcompiler_JNvPTXCompiler_nvPTXCompilerGetI
         return JCUDA_INTERNAL_ERROR;
     }
 
+    if (!checkCapacity(env, infoLogSize, 1, "Parameter 'infoLogSize' must have at least one element")) return JCUDA_INTERNAL_ERROR;
+
     // Log message
     Logger::log(LOG_TRACE, "Executing nvPTXCompilerGetInfoLogSize(compiler=%p, infoLogSize=%p)\n",
         compiler, infoLogSize);
@@ -575,6 +639,9 @@ JNIEXPORT jint JNICALL Java_jcuda_nvptxcompiler_JNvPTXCompiler_nvPTXCompilerGetI
 
     // Native function call
     nvPTXCompileResult jniResult_native = nvPTXCompilerGetInfoLogSize(compiler_native, &infoLogSize_native);
+
+    // CUDA does not define output values on failure.
+    if (jniResult_native != NVPTXCOMPILE_SUCCESS) return (jint)jniResult_native;
 
     // Write back native variable values
     // compiler is read-only
@@ -625,6 +692,10 @@ JNIEXPORT jint JNICALL Java_jcuda_nvptxcompiler_JNvPTXCompiler_nvPTXCompilerGetI
 
     // Obtain native variable values
     compiler_native = (nvPTXCompilerHandle)getNativePointerValue(env, compiler);
+    size_t required = 0;
+    nvPTXCompileResult sizeResult = nvPTXCompilerGetInfoLogSize(compiler_native, &required);
+    if (sizeResult != NVPTXCOMPILE_SUCCESS) return (jint)sizeResult;
+    if (!checkCapacity(env, infoLog, required, "Parameter 'infoLog' is smaller than the required output size")) return JCUDA_INTERNAL_ERROR;
     if (!initNative(env, infoLog, infoLog_native, true)) return JCUDA_INTERNAL_ERROR;
 
     // Native function call
