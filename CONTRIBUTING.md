@@ -2,7 +2,7 @@
 
 This is a development fork of [JCuda](https://github.com/jcuda/jcuda), originally by Marco Hutter and community contributors. Preserve the MIT license and attribution. Development and integration now happen in the RicheyWorks forks; historical upstream PR links document individual patches. We are not submitting further upstream PRs or promising upstream review, acceptance or releases.
 
-The twenty verified changes are combined here and in two shared dependencies. Read [the integration record](docs/FORK_INTEGRATION.md) and [fix inventory](docs/CONTRIBUTION_INVENTORY.md). Documentation and GPU art do not count as additional binding fixes. This is source integration, not a published Maven/native binary release.
+The twenty-three verified changes are combined here and in two shared dependencies. Read [the integration record](docs/FORK_INTEGRATION.md) and [fix inventory](docs/CONTRIBUTION_INVENTORY.md). Documentation and GPU art do not count as additional binding fixes. This is source integration, not a published Maven/native binary release.
 
 ## Obtain the integrated source
 

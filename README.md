@@ -13,9 +13,11 @@ For Java-only verification, install the sibling parent and run `mvn -f JCudaJava
 
 ## 🏆 Fix log
 
-**20 distinct fixes integrated in the RicheyWorks forks:** 19 runtime/API fixes (including diagnostic formatting) and 1 build fix. The combined stack passed 198 focused regression cases plus 9 optional round-trip checks; a tiny GPU kernel also passed. Historical upstream submissions remain unmerged; those links are records of individual patches, not a promise of upstream review. This source integration is not a binary release. See [integration and testing details](docs/FORK_INTEGRATION.md). Companion tests, documentation and the separately credited community dependency do not increase our count.
+**23 distinct fixes integrated in the RicheyWorks forks:** 22 runtime/API fixes (including diagnostic formatting) and 1 build fix. The original twenty-fix stack passed 198 focused regression cases plus 9 optional round-trip checks; a tiny GPU kernel also passed. Historical upstream submissions remain unmerged; those links are records of individual patches, not a promise of upstream review. This source integration is not a binary release. See [integration and testing details](docs/FORK_INTEGRATION.md). Companion tests, documentation and the separately credited community dependency do not increase our count.
 
-| # | Fix | Historical upstream draft |
+The three later JNI safety fixes are recorded in [the safety integration record](docs/SAFETY_INTEGRATION.md), with separate combined validation and limits.
+
+| # | Fix | Evidence / historical upstream draft |
 | --- | --- | --- |
 | 1 | Preserve direct-buffer marks when creating position-aware pointers | [Draft #49](https://github.com/jcuda/jcuda/pull/49) |
 | 2 | Honor stored pointer offsets in both `getByteBuffer` views | [Draft #50](https://github.com/jcuda/jcuda/pull/50) |
@@ -37,6 +39,9 @@ For Java-only verification, install the sibling parent and run `mvn -f JCudaJava
 | 18 | Return stream access-policy windows through the correct nested object and preserve their field values | [Draft #65](https://github.com/jcuda/jcuda/pull/65) |
 | 19 | Return NVRTC lowered-name errors without reading an invalid output pointer or reporting false out-of-memory | [Draft #66](https://github.com/jcuda/jcuda/pull/66) |
 | 20 | Reject undersized NVRTC binary-output arrays before native writes | [Draft #67](https://github.com/jcuda/jcuda/pull/67) |
+| 21 | Validate PTX compiler lengths, output capacities and failed-query outputs | [Evidence](docs/PTX_BOUNDARY_VALIDATION.md) |
+| 22 | Bound NVRTC architecture-list output and preserve trailing Java elements | [Evidence](docs/NVRTC_ARCHITECTURE_CAPACITY.md) |
+| 23 | Preserve PCI bus-ID outputs on CUDA errors and validate native capacities | [Evidence](docs/PCI_BUS_ID_ERRORS.md) |
 
 See the [verified inventory](docs/CONTRIBUTION_INVENTORY.md) for before/after evidence and testing limits. The 20-fix report was prepared privately; the next milestone is [original JCuda GPU art](docs/BEAUTIFUL_JAVA_ROADMAP.md). Join in with a focused, reproducible contribution; upstream review and release decisions remain with the original project.
 
